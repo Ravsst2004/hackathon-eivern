@@ -10,7 +10,7 @@ export interface StudentType {
 }
 
 export interface OrmawaType {
-    id: string;
+    id: string | undefined;
     nama: string;
     logo: string;
     deskripsi: string;
