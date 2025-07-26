@@ -53,7 +53,7 @@ class RequestAccountUserController extends Controller
             'id_role' => Role::where('nama', Roles::MAHASISWA->value)->first()->id,
         ]);
 
-         $user->notify(new AccountForUser($account->nim, $randomPassword));
+        $user->notify(new AccountForUser($account->nim, $randomPassword));
         $account->delete();
         return redirect()->back()->with('success', 'Akun berhasil dibuat dan notifikasi telah dikirim');
 
