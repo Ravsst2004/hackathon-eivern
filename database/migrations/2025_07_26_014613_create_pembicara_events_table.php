@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('pembicara_events', function (Blueprint $table) {
             $table->id();
+            $table->string('nama', 255);
+            $table->string('deskripsi', 255);
+            $table->string('photo', 255);
+            $table->unsignedBigInteger('id_events');
             $table->timestamps();
+
+            $table->foreign('id_events')->references('id')->on('events')->onDelete('cascade');
         });
     }
 

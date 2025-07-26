@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('ormawas', function (Blueprint $table) {
             $table->id();
+            $table->string('nama', 255);
+            $table->string('logo', 255);
+            $table->text('deskripsi');
+            $table->char('user_id', 16);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('nim')->on('users')->onDelete('cascade');
         });
     }
 

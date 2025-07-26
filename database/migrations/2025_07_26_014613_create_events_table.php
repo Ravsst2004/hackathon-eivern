@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+            $table->string('nama', 255);
+            $table->string('logo', 255);
+            $table->text('deskripsi');
+            $table->date('tanggal');
+            $table->unsignedBigInteger('ormawa_id');
             $table->timestamps();
+
+            $table->foreign('ormawa_id')->references('id')->on('ormawa')->onDelete('cascade');
         });
     }
 

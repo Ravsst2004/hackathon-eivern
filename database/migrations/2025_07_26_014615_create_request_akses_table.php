@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('request_akses', function (Blueprint $table) {
             $table->id();
+            $table->string('email', 255);
+            $table->char('nim', 16);
             $table->timestamps();
         });
     }

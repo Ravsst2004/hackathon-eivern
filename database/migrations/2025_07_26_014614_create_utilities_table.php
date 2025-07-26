@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('utilities', function (Blueprint $table) {
             $table->id();
+            $table->integer('max_skkm');
+            $table->integer('logo');
             $table->timestamps();
         });
     }
