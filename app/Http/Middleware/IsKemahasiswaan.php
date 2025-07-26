@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use app\Enums\Roles;
+use App\Enums\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,7 @@ class IsKemahasiswaan
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-    {   
+    {
         if (Auth::check() && Auth::user()->role->nama === Roles::KEMAHASISWAAN->value) {
             return $next($request);
         }

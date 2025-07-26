@@ -1,4 +1,4 @@
-import { Plus, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 import { EventForm } from '@/components/events/event-form';
 import EventTable from '@/components/events/event-table';
@@ -14,11 +14,10 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { EventType } from '@/types/model';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -53,17 +52,15 @@ const initialEvents: EventType[] = [
     },
 ];
 
-export default function Event() {
+export default function Event({ events, ormawa }: any) {
+    console.log(ormawa);
+
     const [eventList, setEventList] = useState<EventType[]>(initialEvents);
     const [searchTerm, setSearchTerm] = useState('');
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingEvent, setEditingEvent] = useState<EventType | undefined>();
     const [deletingEvent, setDeletingEvent] = useState<EventType | undefined>();
     const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
-
-    const filteredEvents = eventList.filter(
-        (event) => event.name.toLowerCase().includes(searchTerm.toLowerCase()) || event.description.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
 
     const handleAddEvent = () => {
         setFormMode('create');
@@ -83,20 +80,12 @@ export default function Event() {
 
     const confirmDelete = () => {
         if (deletingEvent) {
-            setEventList(eventList.filter((e) => e.id !== deletingEvent.id));
+            router.delete(route('events.destroy', editingEvent.id), {
+                onError: () => {
+                    console.log('error');
+                },
+            });
             setDeletingEvent(undefined);
-        }
-    };
-
-    const handleFormSubmit = (eventData: EventType) => {
-        if (formMode === 'create') {
-            const newEvent = {
-                ...eventData,
-                id: Date.now().toString(),
-            };
-            setEventList([...eventList, newEvent]);
-        } else if (formMode === 'edit' && editingEvent) {
-            setEventList(eventList.map((e) => (e.id === editingEvent.id ? { ...eventData, id: editingEvent.id } : e)));
         }
     };
 
@@ -125,7 +114,7 @@ export default function Event() {
                             <CardDescription>Kelola dan pantau data event kampus</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="mb-4 flex items-center space-x-2">
+                            {/* <div className="mb-4 flex items-center space-x-2">
                                 <Search className="h-4 w-4 text-muted-foreground" />
                                 <Input
                                     placeholder="Cari berdasarkan nama atau deskripsi..."
@@ -133,11 +122,11 @@ export default function Event() {
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     className="max-w-sm"
                                 />
-                            </div>
+                            </div> */}
 
                             {/* Table */}
                             <EventTable
-                                filteredEvents={filteredEvents}
+                                filteredEvents={events}
                                 handleEditEvent={handleEditEvent}
                                 handleDeleteEvent={handleDeleteEvent}
                                 searchTerm={searchTerm}
@@ -146,13 +135,7 @@ export default function Event() {
                     </Card>
 
                     {/* Event Form Dialog */}
-                    <EventForm
-                        event={editingEvent}
-                        isOpen={isFormOpen}
-                        onClose={() => setIsFormOpen(false)}
-                        onSubmit={handleFormSubmit}
-                        mode={formMode}
-                    />
+                    <EventForm ormawaList={ormawa} event={editingEvent} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} mode={formMode} />
 
                     {/* Delete Confirmation Dialog */}
                     <AlertDialog open={!!deletingEvent} onOpenChange={() => setDeletingEvent(undefined)}>
