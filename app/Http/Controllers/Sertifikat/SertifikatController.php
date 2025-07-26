@@ -131,5 +131,29 @@ class SertifikatController extends Controller
         return view('sertifikat.paraf-bem', compact('sertifikat'));
     }
 
+    public function getMyCertificates()
+    {
+        $nim = Auth::user()->nim;
+        
+        // Ambil sertifikat yang terkait dengan NIM tersebut
+        $sertifikat = SertifikatEvent::where('user_id', $nim)
+            ->with(['event' => function($query) {
+                $query->select('id', 'nama', 'tanggal');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get([
+                'id',
+                'id_uniq_sertif',
+                'img',
+                'event_id',
+                'paraf_bem',
+                'paraf_kemahasiswaan',
+                'created_at'
+            ]);
 
+        return response()->json([
+            'success' => true,
+            'data' => $sertifikat
+        ]);
+    }
 }
