@@ -7,6 +7,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\EventDetailController;
 use App\Http\Controllers\Auth\RequestAccountUserController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\InfoController;
 use App\Http\Controllers\Sertifikat\SertifikatController;
 
 // Route::get('/', function () {
@@ -25,9 +26,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
-    Route::get('profile', function () {
-        return Inertia::render('profile');
-    });
+    Route::get('profile', [InfoController::class, 'index'])->name('profile.edit');
+
+
+
     Route::resource('ormawa', OrmawaController::class);
 
 
