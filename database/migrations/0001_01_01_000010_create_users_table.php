@@ -12,13 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->char('nim', 16)->primary();
+            $table->string('name', 255);
+            $table->string('email', 255);
+            $table->string('password', 255);
+            $table->unsignedBigInteger('id_jurusan');
+            $table->unsignedBigInteger('id_role');
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('id_jurusan')->references('id')->on('jurusan')->onDelete('cascade');
+            $table->foreign('id_role')->references('id')->on('role')->onDelete('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -29,11 +33,13 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->char('user_id', 16)->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
+
+            $table->foreign('user_id')->references('nim')->on('users')->nullOnDelete();
         });
     }
 
