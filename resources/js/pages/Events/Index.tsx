@@ -1,17 +1,33 @@
-import OtherEventsSidebar from '@/components/events/OtherEventsSidebar'; // Komponen baru untuk sidebar
 import GuestLayout from '@/layouts/guest-layout';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 
-// Definisikan tipe data untuk props agar lebih aman
+// --- Tipe Data Disesuaikan dengan Controller ---
+interface Ormawa {
+    id: number;
+    nama: string;
+}
+
+interface Pembicara {
+    id: number;
+    nama: string;
+    jabatan: string; // Asumsi ada field 'jabatan'
+}
+
+interface PembicaraEvent {
+    id: number;
+    pembicara: Pembicara;
+}
+
 interface Event {
     id: number;
-    title: string;
-    description: string;
-    image_url: string; // sesuaikan dengan nama kolom di database Anda
-    // tambahkan properti lain yang relevan
-    speaker_info: string;
-    certificate_info: string;
+    nama: string; // DIUBAH: dari title
+    deskripsi: string; // DIUBAH: dari description
+    logo: string; // DIUBAH: dari image_url
+    tanggal: string;
+    ormawa: Ormawa;
+    pembicara_events: PembicaraEvent[]; // DIUBAH: nama relasi dari Eloquent
+    // Asumsi 'certificate_info' tidak ada di database, kita akan beri fallback
 }
 
 interface PageProps {
@@ -22,28 +38,45 @@ interface PageProps {
 export default function EventShow({ event, otherEvents }: PageProps) {
     const [activeTab, setActiveTab] = useState('overview');
 
+    // Fungsi untuk memformat tanggal
+    const formatDate = (dateString: string) => {
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('id-ID', options);
+    };
+
     const renderTabContent = () => {
         switch (activeTab) {
             case 'pembicara':
                 return (
                     <div>
-                        <h3 className="mb-3 text-xl font-semibold">Informasi Pembicara</h3>
-                        <p className="text-gray-600">{event.speaker_info || 'Informasi pembicara belum tersedia.'}</p>
+                        <h3 className="mb-4 text-xl font-semibold text-black">Informasi Pembicara</h3>
+                        {event.pembicara_events && event.pembicara_events.length > 0 ? (
+                            <ul className="space-y-3">
+                                {event.pembicara_events.map(({ pembicara }) => (
+                                    <li key={pembicara.id} className="rounded-md border bg-gray-50 p-3">
+                                        <p className="font-semibold text-gray-800">{pembicara.nama}</p>
+                                        <p className="text-sm text-gray-600">{pembicara.jabatan || 'Informasi jabatan tidak tersedia'}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-gray-600">Informasi pembicara belum tersedia.</p>
+                        )}
                     </div>
                 );
             case 'sertifikat':
                 return (
                     <div>
-                        <h3 className="mb-3 text-xl font-semibold">Informasi Sertifikat</h3>
-                        <p className="text-gray-600">{event.certificate_info || 'Informasi sertifikat belum tersedia.'}</p>
+                        <h3 className="mb-3 text-xl font-semibold text-black">Informasi Sertifikat</h3>
+                        <p className="text-gray-600">Informasi mengenai sertifikat akan diumumkan lebih lanjut oleh penyelenggara acara.</p>
                     </div>
                 );
             case 'overview':
             default:
                 return (
                     <div>
-                        <h3 className="mb-3 text-xl font-semibold">Deskripsi Acara</h3>
-                        <p className="whitespace-pre-wrap text-gray-600">{event.description}</p>
+                        <h3 className="mb-3 text-xl font-semibold text-black">Deskripsi Acara</h3>
+                        <p className="whitespace-pre-wrap text-gray-600">{event.deskripsi}</p>
                     </div>
                 );
         }
@@ -51,7 +84,7 @@ export default function EventShow({ event, otherEvents }: PageProps) {
 
     return (
         <GuestLayout>
-            <Head title={event.title} />
+            <Head title={event.nama} />
 
             <div className="container mx-auto my-8 px-4 lg:my-16">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -59,8 +92,8 @@ export default function EventShow({ event, otherEvents }: PageProps) {
                     <main className="lg:col-span-2">
                         {/* Gambar Event */}
                         <div className="mb-6 h-80 w-full overflow-hidden rounded-lg bg-gray-200">
-                            {event.image_url ? (
-                                <img src={event.image_url} alt={event.title} className="h-full w-full object-cover" />
+                            {event.logo ? (
+                                <img src={`/storage/logos/${event.logo}`} alt={event.nama} className="h-full w-full object-cover" />
                             ) : (
                                 <div className="flex h-full w-full items-center justify-center">
                                     <svg className="h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,8 +108,13 @@ export default function EventShow({ event, otherEvents }: PageProps) {
                             )}
                         </div>
 
-                        {/* Judul dan Deskripsi Awal */}
-                        <h1 className="mb-4 text-4xl font-bold text-gray-900">{event.title}</h1>
+                        {/* Judul dan Info Tambahan */}
+                        <h1 className="mb-2 text-4xl font-bold text-gray-900">{event.nama}</h1>
+                        <div className="mb-6 flex items-center space-x-4 text-gray-600">
+                            <span>{/* Diselenggarakan oleh <strong>{event.ormawa.nama}</strong> */}</span>
+                            <span>•</span>
+                            <span>{formatDate(event.tanggal)}</span>
+                        </div>
 
                         {/* Kontainer Tab */}
                         <div className="mt-8">
@@ -102,17 +140,12 @@ export default function EventShow({ event, otherEvents }: PageProps) {
                                     </button>
                                 </nav>
                             </div>
-
-                            {/* Konten Tab */}
                             <div className="py-6">{renderTabContent()}</div>
                         </div>
                     </main>
 
                     {/* Kolom Kanan - Sidebar */}
-                    <aside>
-                        <OtherEventsSidebar events={otherEvents} />
-                        {/* Anda bisa memanggil komponen ini dua kali jika ingin dua blok "Acara Lainnya" */}
-                    </aside>
+                    <aside>{/* <OtherEventsSidebar /> */}</aside>
                 </div>
             </div>
         </GuestLayout>
