@@ -83,8 +83,8 @@ class UserController extends Controller
             'nim' => $request->nim,
             'name' => $request->name,
             'email' => $request->email,
-            'idJurusan' => $request->id_jurusan,
-            'idRole' => $request->id_role,
+            'id_jurusan' => $request->id_jurusan,
+            'id_role' => $request->id_role,
             'password' => Hash::make($password),
         ]);
 
@@ -159,8 +159,8 @@ class UserController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'idJurusan' => $request->id_jurusan,
-            'idRole' => $request->id_role,
+            'id_jurusan' => $request->id_jurusan,
+            'id_role' => $request->id_role,
         ]);
 
         return redirect()->back()->with('success', 'User berhasil diperbarui.');
