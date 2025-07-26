@@ -15,3 +15,11 @@ export interface OrmawaType {
     logo: string;
     deskripsi: string;
 }
+
+export interface EventType {
+    id: string | undefined;
+    name: string;
+    logo: string;
+    description: string;
+    date: string;
+}
