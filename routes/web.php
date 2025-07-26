@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrmawaController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\EventDetailController;
 use App\Http\Controllers\Auth\RequestAccountUserController;
 
@@ -22,6 +23,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::resource('ormawa', OrmawaController::class);
+
+Route::get('/utilities/{id}/edit', [UtilityController::class, 'edit'])->name('utilities.edit');
+Route::put('/utilities/{id}', [UtilityController::class, 'update'])->name('utilities.update');
 
 
 Route::get('/account-request', [RequestAccountUserController::class, 'approveAccountPage'])->name('account-request');
