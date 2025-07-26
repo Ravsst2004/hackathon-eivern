@@ -1,6 +1,6 @@
 // resources/js/layouts/auth-layout.tsx
 
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import React from 'react';
 
 interface AuthLayoutProps {
@@ -22,9 +22,9 @@ export default function AuthLayout({ children, title, pageTitle = 'Login', ...pr
                 {/* Icon Buku (SVG placeholder) - Ukuran tetap h-10 w-10 */}
                 {/* Sesuaikan padding p-4 (16px) untuk jarak di dalam lingkaran ikon */}
                 <div className="mb-4 flex items-center justify-center rounded-full bg-gray-800 p-4">
-                    <svg className="h-10 w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M4 19h16v-2H4v2zm0-4h16v-2H4v2zm0-4h16V9H4v2zm0-4h16V5H4v2zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM12 7l-4 4h8l-4-4zm0 2l-4 4h8l-4-4zm0 2l-4 4h8l-4-4z" />
-                    </svg>
+                    <Link href={route('landing')}>
+                        <img src="/images/logo-siska.png" alt="SISKA Icon" className="mr-3 h-8 w-8" />
+                    </Link>
                 </div>
                 {/* Garis di bawah ikon (Placeholder) */}
                 {/* Sesuaikan mb-1 (margin-bottom) antara dua garis */}
