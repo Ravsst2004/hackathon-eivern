@@ -1,4 +1,4 @@
-import { Plus, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 import { OrmawaForm } from '@/components/ormawa/ormawa-form';
 import OrmawaTable from '@/components/ormawa/ormawa-table';
@@ -14,11 +14,11 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { OrmawaType } from '@/types/model';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -28,39 +28,52 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-// Mock data for Ormawa
-const initialOrmawa: OrmawaType[] = [
-    {
-        id: '1',
-        nama: 'BEM Universitas',
-        logo: '/logos/bem-univ.png',
-        deskripsi: 'Badan Eksekutif Mahasiswa tingkat universitas',
-    },
-    {
-        id: '2',
-        nama: 'HIMATIK',
-        logo: '/logos/himatik.png',
-        deskripsi: 'Himpunan Mahasiswa Teknik Informatika',
-    },
-    {
-        id: '3',
-        nama: 'HMJ Manajemen',
-        logo: '/logos/hmj-manajemen.png',
-        deskripsi: 'Himpunan Mahasiswa Jurusan Manajemen',
-    },
-];
+interface OrmawaData {
+    id: number;
+    nama: string;
+    logo: string;
+    deskripsi: string;
+    user_id: string;
+    deleted_at: string | null;
+    created_at: string | null;
+    updated_at: string | null;
+    user: {
+        nim: string;
+        name: string;
+        email: string;
+        id_jurusan: number;
+        id_role: number;
+        deleted_at: string | null;
+        created_at: string;
+        updated_at: string;
+    };
+}
 
-export default function Ormawa() {
-    const [ormawaList, setOrmawaList] = useState<OrmawaType[]>(initialOrmawa);
+interface OrmawaProps {
+    ormawa: {
+        data: OrmawaData[];
+        next_page_url: string;
+        prev_page_url: string;
+        current_page: number;
+    };
+    jurusan: {
+        id: number;
+        nama: string;
+        deleted_at: string | null;
+        created_at: string;
+        updated_at: string;
+    }[];
+}
+
+export default function Ormawa({ ormawa, jurusan }: OrmawaProps) {
+    console.log(ormawa);
+
+    const [ormawaList, setOrmawaList] = useState<OrmawaType[]>(ormawa.data);
     const [searchTerm, setSearchTerm] = useState('');
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingOrmawa, setEditingOrmawa] = useState<OrmawaType | undefined>();
     const [deletingOrmawa, setDeletingOrmawa] = useState<OrmawaType | undefined>();
     const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
-
-    const filteredOrmawa = ormawaList.filter(
-        (ormawa) => ormawa.nama.toLowerCase().includes(searchTerm.toLowerCase()) || ormawa.deskripsi.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
 
     const handleAddOrmawa = () => {
         setFormMode('create');
@@ -76,24 +89,16 @@ export default function Ormawa() {
 
     const handleDeleteOrmawa = (ormawa: OrmawaType) => {
         setDeletingOrmawa(ormawa);
+        console.log(editingOrmawa);
     };
 
     const confirmDelete = () => {
         if (deletingOrmawa) {
-            setOrmawaList(ormawaList.filter((o) => o.id !== deletingOrmawa.id));
-            setDeletingOrmawa(undefined);
-        }
-    };
-
-    const handleFormSubmit = (ormawaData: OrmawaType) => {
-        if (formMode === 'create') {
-            const newOrmawa = {
-                ...ormawaData,
-                id: Date.now().toString(),
-            };
-            setOrmawaList([...ormawaList, newOrmawa]);
-        } else if (formMode === 'edit' && editingOrmawa) {
-            setOrmawaList(ormawaList.map((o) => (o.id === editingOrmawa.id ? { ...ormawaData, id: editingOrmawa.id } : o)));
+            router.delete(route('ormawa.destroy', deletingOrmawa.id), {
+                onError: () => {
+                    console.log('error');
+                },
+            });
         }
     };
 
@@ -122,34 +127,31 @@ export default function Ormawa() {
                             <CardDescription>Kelola dan pantau data ormawa</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="mb-4 flex items-center space-x-2">
-                                <Search className="h-4 w-4 text-muted-foreground" />
-                                <Input
-                                    placeholder="Cari berdasarkan nama atau deskripsi..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="max-w-sm"
-                                />
-                            </div>
-
                             {/* Table */}
                             <OrmawaTable
-                                filteredOrmawa={filteredOrmawa}
+                                filteredOrmawa={ormawa.data}
                                 handleEditOrmawa={handleEditOrmawa}
                                 handleDeleteOrmawa={handleDeleteOrmawa}
                                 searchTerm={searchTerm}
                             />
+                            <Pagination className="mt-4">
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious href={ormawa.prev_page_url} />
+                                    </PaginationItem>
+                                    <PaginationItem>
+                                        <PaginationLink href="#">{ormawa.current_page}</PaginationLink>
+                                    </PaginationItem>
+                                    <PaginationItem>
+                                        <PaginationNext href={ormawa.next_page_url} />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
                         </CardContent>
                     </Card>
 
                     {/* Ormawa Form Dialog */}
-                    <OrmawaForm
-                        ormawa={editingOrmawa}
-                        isOpen={isFormOpen}
-                        onClose={() => setIsFormOpen(false)}
-                        onSubmit={handleFormSubmit}
-                        mode={formMode}
-                    />
+                    <OrmawaForm ormawa={editingOrmawa} jurusan={jurusan} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} mode={formMode} />
 
                     {/* Delete Confirmation Dialog */}
                     <AlertDialog open={!!deletingOrmawa} onOpenChange={() => setDeletingOrmawa(undefined)}>
