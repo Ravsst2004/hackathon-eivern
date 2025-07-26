@@ -4,7 +4,7 @@ import { Progress } from '@/components/ui/progress';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { FileText, Plus, TrendingUp, Users } from 'lucide-react';
+import { FileText, TrendingUp, Users } from 'lucide-react';
 
 const requestData = {
     paraf: {
@@ -162,7 +162,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Progress Overview */}
-                <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <div className="mb-8">
                     <Card>
                         <CardHeader>
                             <CardTitle>Status Overview</CardTitle>
@@ -193,7 +193,7 @@ export default function Dashboard() {
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    {/* <Card>
                         <CardHeader>
                             <CardTitle>Quick Actions</CardTitle>
                             <CardDescription>Aksi cepat untuk mengelola request</CardDescription>
@@ -216,7 +216,7 @@ export default function Dashboard() {
                                 Generate Report
                             </Button>
                         </CardContent>
-                    </Card>
+                    </Card> */}
                 </div>
 
                 {/* Recent Requests Table */}

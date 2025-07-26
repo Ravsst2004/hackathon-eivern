@@ -15,7 +15,7 @@ use App\Http\Controllers\Sertifikat\SertifikatController;
 // })->name('landing');
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
-Route::get('/event/{id}', [EventDetailController::class, 'show'])->name('events.show');
+Route::get('/event/{id}', [EventDetailController::class, 'detail'])->name('events.show');
 
 
 Route::get('/all-events', function () {
@@ -27,7 +27,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
     Route::get('profile', [InfoController::class, 'index'])->name('profile.edit');
-
 
 
     Route::resource('ormawa', OrmawaController::class);

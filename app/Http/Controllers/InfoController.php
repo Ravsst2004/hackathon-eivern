@@ -14,6 +14,10 @@ class InfoController extends Controller
         $utility = Utility::get();
         $data = $user->sertifikatEvents()->get();
         $totalSkkm = $data->sum('skkm');
-        return view('info');
+        return inertia('profile', [
+            'user' => $user,
+            'utility' => $utility,
+            'totalSkkm' => $totalSkkm
+        ]);
     }
 }
