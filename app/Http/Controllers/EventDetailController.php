@@ -19,7 +19,8 @@ class EventDetailController extends Controller
     public function show(Event $event)
     {
         // Muat relasi yang diperlukan. Anda bisa menambahkan relasi lain di sini.
-        $event->load('ormawa', 'pembicaraEvents');
+        $event->load(['ormawa', 'pembicaraEvents']);
+
         
         // Ambil beberapa event lain untuk ditampilkan di sidebar "Acara Lainnya"
         $otherEvents = Event::where('id', '!=', $event->id)

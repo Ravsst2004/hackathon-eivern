@@ -59,7 +59,7 @@ export default function Login() {
                         <h2 className="f mb-4 text-xl text-gray-800">Meminta verifikasi akun berhasil, menunggu verifikasi.</h2>
                         {/* Tombol "Kembali ke Landing Page" akan selalu tampil jika submissionInitiated true */}
                         <a
-                            href={route('landing-page')} // Pastikan 'landing' adalah nama route landing page Anda
+                            href={route('landing')} // Pastikan 'landing' adalah nama route landing page Anda
                             className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-lg font-bold tracking-widest text-white ring-gray-300 transition duration-150 ease-in-out hover:bg-gray-700 focus:border-gray-900 focus:ring focus:outline-none active:bg-gray-900 disabled:opacity-25"
                         >
                             Kembali ke Landing Page
