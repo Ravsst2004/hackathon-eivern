@@ -67,8 +67,8 @@ class UserController extends Controller
             'nim' => 'required|unique:users,nim|size:16',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'id_jurusan' => 'required|exists:jurusan,id',
-            'id_role' => 'required|exists:role,id',
+            'idJurusan' => 'required|exists:jurusan,id',
+            'idRole' => 'required|exists:role,id',
         ]);
 
         // Validasi role yang boleh diberikan
@@ -83,8 +83,8 @@ class UserController extends Controller
             'nim' => $request->nim,
             'name' => $request->name,
             'email' => $request->email,
-            'id_jurusan' => $request->id_jurusan,
-            'id_role' => $request->id_role,
+            'idJurusan' => $request->id_jurusan,
+            'idRole' => $request->id_role,
             'password' => Hash::make($password),
         ]);
 
@@ -147,8 +147,8 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->nim . ',nim',
-            'id_jurusan' => 'required|exists:jurusan,id',
-            'id_role' => 'required|exists:role,id',
+            'idJurusan' => 'required|exists:jurusan,id',
+            'idRole' => 'required|exists:role,id',
         ]);
 
         $selectedRole = Role::findOrFail($request->id_role);
@@ -159,8 +159,8 @@ class UserController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'id_jurusan' => $request->id_jurusan,
-            'id_role' => $request->id_role,
+            'idJurusan' => $request->id_jurusan,
+            'idRole' => $request->id_role,
         ]);
 
         return redirect()->back()->with('success', 'User berhasil diperbarui.');
