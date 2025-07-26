@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use app\Enums\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,7 @@ class IsSuperAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->Roles::SUPER_ADMIN->value) {
+        if (Auth::check() && Auth::user()->role->nama === Roles::SUPER_ADMIN->value) {
             return $next($request);
         }
 
