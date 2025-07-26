@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class OrmawaController extends Controller
 {
@@ -50,21 +51,22 @@ class OrmawaController extends Controller
             $path = $request->file('logo')->store('ormawa', 'public');
         }
         
-        User::create([
+        $user = User::create([
             'name' => $request->nameUser,
             'email' => $request->email,
             'password' => bcrypt($request->nim),
             'id_jurusan' => $request->idJurusan,
             'id_role' => Role::where('nama', Roles::ORMAWA->value)->first()->id,
-            'id_ormawa' => Ormawa::create([
-                'name' => $request->name,
-                'logo' => $path,
-                'deskripsi' => $request->deskripsi,
-                'id_user' => $user->id,
-            ])->id
             ]);
+        
+        $ormawa = Ormawa::create([
+            'nama' => $request->name,
+            'logo' => $path,
+            'deskripsi' => $request->deskripsi,
+            'user_id' => $user->nim
+        ]);
 
-            return back()->with('success', 'Success Creating Ormawa');
+        return back()->with('success', 'Success Creating Ormawa');
     }
 
     /**
@@ -103,9 +105,16 @@ class OrmawaController extends Controller
 
         // Handle logo update jika ada file baru
         if ($request->hasFile('logo')) {
+            // Hapus logo lama jika ada
+            if ($ormawa->logo && Storage::disk('public')->exists($ormawa->logo)) {
+                Storage::disk('public')->delete($ormawa->logo);
+            }
+
+            // Simpan logo baru
             $path = $request->file('logo')->store('ormawa', 'public');
             $ormawa->logo = $path;
         }
+
 
         // Update data ormawa
         $ormawa->name = $request->name;
