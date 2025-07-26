@@ -21,15 +21,13 @@ export default function AuthLayout({ children, title, pageTitle = 'Login', ...pr
                 {/* <-- Sesuaikan mb-10 (misal: 40px) */}
                 {/* Icon Buku (SVG placeholder) - Ukuran tetap h-10 w-10 */}
                 {/* Sesuaikan padding p-4 (16px) untuk jarak di dalam lingkaran ikon */}
-                <div className="mb-4 flex items-center justify-center rounded-full bg-gray-800 p-4">
+                <div>
                     <Link href={route('landing')}>
-                        <img src="/images/logo-siska.png" alt="SISKA Icon" className="mr-3 h-8 w-8" />
+                        <img src="/images/logo-siska.png" alt="SISKA Icon" className="h-20 w-20" />
                     </Link>
                 </div>
                 {/* Garis di bawah ikon (Placeholder) */}
                 {/* Sesuaikan mb-1 (margin-bottom) antara dua garis */}
-                <div className="mb-2 h-1.5 w-24 rounded-full bg-gray-400"></div> {/* <-- Sesuaikan mb-2 (misal: 8px) */}
-                <div className="h-1.5 w-20 rounded-full bg-gray-300"></div>
             </div>
 
             {/* Kotak Form Utama */}
