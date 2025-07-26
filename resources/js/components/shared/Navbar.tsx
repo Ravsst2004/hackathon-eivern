@@ -20,7 +20,7 @@ export default function Navbar() {
                 {/* Menggunakan Link dari Inertia untuk navigasi yang mulus */}
                 <Link
                     href={route('login')} // Menggunakan fungsi route() dari Laravel (Ziggy)
-                    className="rounded-md bg-gray-800 px-6 py-4 font-medium text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
+                    className="rounded-md bg-blue-600 px-6 py-4 font-medium text-white transition duration-150 ease-in-out hover:bg-blue-400 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                 >
                     LOGIN
                 </Link>

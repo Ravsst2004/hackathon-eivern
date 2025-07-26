@@ -84,7 +84,7 @@ export default function Login() {
                     {/* Tombol Sign In */}
                     <button
                         type="submit"
-                        className="w-full rounded-md border border-transparent bg-gray-800 px-4 py-2 text-lg font-medium text-white shadow-sm hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
+                        className="w-full rounded-md border border-transparent bg-blue-600 px-4 py-2 text-lg font-medium text-white shadow-sm hover:bg-blue-400 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
                         disabled={processing} // Tombol dinonaktifkan saat request sedang diproses
                     >
                         {processing ? 'Memproses...' : 'Sign In'}

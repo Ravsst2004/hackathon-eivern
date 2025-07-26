@@ -25,15 +25,18 @@ return Application::configure(basePath: dirname(__DIR__))
         //         '/export-sertifikat',
         //     ],
         // );
+
+        $middleware->alias([
+            'isBem' => IsBem::class,
+            'isKemahasiswaan' => IsKemahasiswaan::class,
+            'isOrmawa' => IsOrmawa::class,
+            'isSuperAdmin' => IsSuperAdmin::class,
+            'isMahasiswa' => IsMahasiswa::class
+        ]);
         $middleware->web(append: [
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
-            IsBem::class,
-            IsKemahasiswaan::class,
-            IsOrmawa::class,
-            IsSuperAdmin::class,
-            IsMahasiswa::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
