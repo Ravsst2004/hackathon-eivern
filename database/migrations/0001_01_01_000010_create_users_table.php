@@ -33,13 +33,13 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->char('nim', 16)->nullable()->index();
+            $table->char('user_id', 16)->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
 
-            $table->foreign('nim')->references('nim')->on('users')->nullOnDelete();
+            $table->foreign('user_id')->references('nim')->on('users')->nullOnDelete();
         });
     }
 
