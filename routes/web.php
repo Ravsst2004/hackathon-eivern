@@ -13,7 +13,12 @@ use App\Http\Controllers\Sertifikat\SertifikatController;
 // })->name('landing');
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
-Route::get('/event/{id}', [EventDetailController::class, 'show']);
+Route::get('/event/{id}', [EventDetailController::class, 'show'])->name('events.show');
+
+
+Route::get('/all-events', function () {
+    return Inertia::render('Events/AllEvents'); // Atau cukup 'LandingPage' jika itu berfungsi
+})->name('all-events');
 
 Route::middleware(['auth', 'verified', 'isBem', 'isOrmawa', 'isKemahasiswaan', 'isSuperAdmin'])->group(function () {
     Route::get('dashboard', function () {
@@ -35,10 +40,6 @@ Route::middleware(['auth', 'verified', 'isBem', 'isOrmawa', 'isKemahasiswaan', '
         Route::get('/export-sertifikat/{eventId}', [SertifikatController::class, 'exportToexcel'])->name('sertifikat.export');
     });
 });
-
-
-
-
 
 
 
