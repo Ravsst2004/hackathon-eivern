@@ -82,7 +82,7 @@ export default function Login() {
                     </button>
                 </form>
 
-                <a href="register" className="text-gray-500 hover:text-gray-700">
+                <a href={route('register')} className="text-gray-500 hover:text-gray-700">
                     Belum punya akun? Daftar sekarang
                 </a>
             </div>

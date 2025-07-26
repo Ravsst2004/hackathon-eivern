@@ -12,10 +12,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia; // <-- Pastikan ini diimpor!
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RequestAccountUserController::class, 'index'])
-        ->name('register');
-
-    Route::post('register', [RequestAccountUserController::class, 'store']);
+    Route::get('register', function () {
+        return Inertia::render('auth/register'); // <-- Ini akan merender komponen React Anda
+    })->name('register');
 
     // --- PERUBAHAN DI SINI UNTUK INERTIA.JS ---
     Route::get('login', function () {
