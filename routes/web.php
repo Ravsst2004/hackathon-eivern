@@ -6,6 +6,7 @@ use App\Http\Controllers\OrmawaController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\EventDetailController;
 use App\Http\Controllers\Auth\RequestAccountUserController;
+use App\Http\Controllers\EventController;
 
 // Route::get('/', function () {
 //     return Inertia::render('LandingPage/index'); // Atau cukup 'LandingPage' jika itu berfungsi
@@ -22,10 +23,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::resource('ormawa', OrmawaController::class);
+Route::resource('events', EventController::class);
 
 
 Route::get('/account-request', [RequestAccountUserController::class, 'approveAccountPage'])->name('account-request');
 Route::post('/account-request/{id}', [RequestAccountUserController::class, 'approveAccount'])->name('account-request.approve');
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';
