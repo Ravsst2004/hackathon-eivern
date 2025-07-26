@@ -10,10 +10,14 @@ export interface StudentType {
 }
 
 export interface OrmawaType {
-    id: string | undefined;
+    id: number | null | undefined;
     nama: string;
-    logo: string;
+    logo: string | File;
     deskripsi: string;
+    nameUser: string;
+    nim: string;
+    email: string;
+    idJurusan: number;
 }
 
 export interface EventType {

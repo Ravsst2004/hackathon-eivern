@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use app\Enums\Roles;
+use App\Enums\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +17,8 @@ class IsBem
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role->nama === Roles::BEM->value) {
+        // dd(Roles::BEM->value);
+        if (Auth::check() && Auth::user()->role->nama == Roles::BEM->value) {
             return $next($request);
         }
 

@@ -13,6 +13,8 @@ interface OrmawaTableProps {
 }
 
 export default function OrmawaTable({ filteredOrmawa, handleEditOrmawa, handleDeleteOrmawa, searchTerm }: OrmawaTableProps) {
+    console.log(filteredOrmawa);
+
     return (
         <div className="rounded-md border">
             <Table>

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use app\Enums\Roles;
+use App\Enums\Roles;
 use Inertia\Inertia;
 use App\Models\Event;
+use App\Models\Ormawa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,13 +18,20 @@ class EventController extends Controller
     {
         $user = Auth::user();
 
-        $events = match ($user->role_enum) {
-            Roles::ORMAWA => Event::where('ormawa_id', $user->ormawa->id)->get(),
-            default => Event::all()
-        };
+        $query = Event::query();
 
-        return Inertia::render('Events/Index', [
-            'events' => $events
+        if ($user->role->nama === Roles::ORMAWA->value) {
+            $query->where('ormawa_id', $user->ormawa->id);
+        }
+
+        $events = $query->with('sertifikatEvents')->get();
+        $ormawa = Ormawa::all();
+
+        // return $events;
+
+        return Inertia::render('event', [
+            'events' => $events,
+            'ormawa' => $ormawa,
         ]);
     }
 
@@ -40,15 +48,18 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'logo' => 'required|string|max:255',
+            'logo' => 'required|max:255',
             'deskripsi' => 'required|string',
             'tanggal' => 'required|date',
+            'ormawa' => 'required',
         ]);
 
+
         $user = Auth::user();
-        $validated['ormawa_id'] = $user->ormawa->id;
+        $validated['ormawa_id'] = $request->ormawa;
 
         Event::create($validated);
 
@@ -92,7 +103,7 @@ class EventController extends Controller
 
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'logo' => 'required|string|max:255',
+            'logo' => 'nullable|max:255',
             'deskripsi' => 'required|string',
             'tanggal' => 'required|date',
         ]);

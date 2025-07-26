@@ -32,7 +32,7 @@ export default function Login() {
         setSubmissionInitiated(true);
 
         // Lakukan post ke route login
-        post(route('login'), {
+        post(route('register'), {
             onSuccess: () => {
                 // Tidak perlu mengubah state backendSuccess di sini lagi
                 // karena tombol akan selalu muncul setelah submissionInitiated

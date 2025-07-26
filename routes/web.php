@@ -4,8 +4,10 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrmawaController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\EventDetailController;
 use App\Http\Controllers\Auth\RequestAccountUserController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\Sertifikat\SertifikatController;
 
 // Route::get('/', function () {
@@ -20,19 +22,23 @@ Route::get('/all-events', function () {
     return Inertia::render('Events/AllEvents'); // Atau cukup 'LandingPage' jika itu berfungsi
 })->name('all-events');
 
-Route::middleware(['auth', 'verified', 'isBem', 'isOrmawa', 'isKemahasiswaan', 'isSuperAdmin'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
     Route::resource('ormawa', OrmawaController::class);
 
 
-    Route::middleware(['isBem', 'isKemahasiswaan', 'isSuperAdmin'])->group(function () {
+    Route::middleware([])->group(function () {
         Route::get('/request-paraf', [SertifikatController::class, 'indexParaf'])->name('sertifikat.index');
         Route::patch('/approve-paraf', [SertifikatController::class, 'approveParaf'])->name('sertifikat.approve');
         Route::put('/generate-uniq-id', [SertifikatController::class, 'uniqIdGenerate'])
-                ->name('ormawa.generate-uniq-id');
+            ->name('ormawa.generate-uniq-id');
         Route::post('/account-request/{id}', [RequestAccountUserController::class, 'approveAccount'])->name('account-request.approve');
+        // util
+        Route::get('/utilities/{id}/edit', [UtilityController::class, 'edit'])->name('utilities.edit');
+        Route::put('/utilities/{id}', [UtilityController::class, 'update'])->name('utilities.update');
+        Route::resource('events', EventController::class);
     });
 
     Route::middleware(['isOrmawa'])->group(function () {
@@ -48,5 +54,5 @@ Route::patch('/paraf-request', [RequestAccountUserController::class, 'requestPar
 Route::get('/account-request', [RequestAccountUserController::class, 'approveAccountPage'])->name('account-request');
 
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';

@@ -19,12 +19,13 @@ class SertifikatController extends Controller
 
     public function importExcel(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'file' => 'required|mimes:xlsx,xls,csv',
             'eventId' => 'required|exists:events,id',
         ]);
 
-        Excel::import(new SertifikatImport($request->event_id), $request->file('file'));
+        Excel::import(new SertifikatImport($request->eventId), $request->file('file'));
 
         return back()->with('success', 'Import berhasil.');
     }
@@ -70,7 +71,6 @@ class SertifikatController extends Controller
     {
         $namaEvent = Event::where('id', $eventId)->first()->nama;
         return Excel::download(new SertifikatExport($eventId), 'sertifikat_event_' . $namaEvent . '.xlsx');
-
     }
 
     public function requestParafBem(Request $request)
@@ -80,13 +80,13 @@ class SertifikatController extends Controller
             'typeParaf' => 'required|in:BEM,KEMAHASISWAAN',
         ]);
 
-        if($request->typeParaf == 'BEM') {
+        if ($request->typeParaf == 'BEM') {
             $sertifikat = SertifikatEvent::where('id_uniq_sertif', $request->sertifId)->first();
             $sertifikat->paraf_bem = Status::REQUEST->value;
             $sertifikat->save();
             return back()->with('success', 'Paraf BEM berhasil di approve.');
         }
-        if($request->typeParaf == 'KEMAHASISWAAN') {
+        if ($request->typeParaf == 'KEMAHASISWAAN') {
             $sertifikat = SertifikatEvent::where('id_uniq_sertif', $request->sertifId)->first();
             $sertifikat->paraf_kemahasiswaan = Status::REQUEST->value;
             $sertifikat->save();
@@ -101,13 +101,13 @@ class SertifikatController extends Controller
             'typeParaf' => 'required|in:BEM,KEMAHASISWAAN',
         ]);
 
-        if($request->typeParaf == 'BEM') {
+        if ($request->typeParaf == 'BEM') {
             $sertifikat = SertifikatEvent::where('id_uniq_sertif', $request->sertifId)->first();
             $sertifikat->paraf_bem = Status::APPROVE->value;
             $sertifikat->save();
             return back()->with('success', 'Sertifikat berhasil di approve.');
         }
-        if($request->typeParaf == 'KEMAHASISWAAN') {
+        if ($request->typeParaf == 'KEMAHASISWAAN') {
             $sertifikat = SertifikatEvent::where('id_uniq_sertif', $request->sertifId)->first();
             $sertifikat->paraf_kemahasiswaan = Status::APPROVE->value;
             $sertifikat->save();
@@ -118,16 +118,16 @@ class SertifikatController extends Controller
     public function indexParaf()
     {
         $user = Auth::user();
-        if($user->role == Roles::BEM->value) {
+        if ($user->role == Roles::BEM->value) {
             $sertifikat = SertifikatEvent::where('paraf_bem', Status::REQUEST->value)->get();
-        }elseif($user->role == Roles::KEMAHASISWAAN->value) {
-             $sertifikat = SertifikatEvent::where('paraf_kemahasiswaan', Status::REQUEST->value)->get();
-        }elseif($user->role == Roles::SUPER_ADMIN->value) {
-                $sertifikat = SertifikatEvent::where(function ($query) {
-                        $query->where('paraf_bem', Status::REQUEST->value)
-                            ->orWhere('paraf_kemahasiswaan', Status::REQUEST->value);
-                        })->get();
-        }else{
+        } elseif ($user->role == Roles::KEMAHASISWAAN->value) {
+            $sertifikat = SertifikatEvent::where('paraf_kemahasiswaan', Status::REQUEST->value)->get();
+        } elseif ($user->role == Roles::SUPER_ADMIN->value) {
+            $sertifikat = SertifikatEvent::where(function ($query) {
+                $query->where('paraf_bem', Status::REQUEST->value)
+                    ->orWhere('paraf_kemahasiswaan', Status::REQUEST->value);
+            })->get();
+        } else {
             $sertifikat = [];
         }
         return view('sertifikat.paraf-bem', compact('sertifikat'));
