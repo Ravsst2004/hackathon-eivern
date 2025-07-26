@@ -1,110 +1,91 @@
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+// resources/js/pages/Auth/Login.tsx
 
-import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
+import AuthLayout from '@/layouts/auth-layout'; // Pastikan path ke AuthLayout benar
+import { useForm } from '@inertiajs/react'; // Head tidak perlu diimpor lagi di sini, karena sudah di AuthLayout
+import React, { FormEvent, useEffect } from 'react';
 
-type LoginForm = {
-    email: string;
-    password: string;
-    remember: boolean;
-};
-
-interface LoginProps {
-    status?: string;
-    canResetPassword: boolean;
-}
-
-export default function Login({ status, canResetPassword }: LoginProps) {
-    const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
-        email: '',
+export default function Login() {
+    const { data, setData, post, processing, errors, reset } = useForm({
+        nim: '',
         password: '',
         remember: false,
     });
 
-    const submit: FormEventHandler = (e) => {
+    useEffect(() => {
+        return () => {
+            reset('password');
+        };
+    }, []);
+
+    const onHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setData(event.target.name as 'nim' | 'password', event.target.value);
+    };
+
+    const submit = (e: FormEvent) => {
         e.preventDefault();
-        post(route('login'), {
-            onFinish: () => reset('password'),
-        });
+        post(route('login'));
     };
 
     return (
-        <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
-            <Head title="Log in" />
-
-            <form className="flex flex-col gap-6" onSubmit={submit}>
-                <div className="grid gap-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
+        // Gunakan AuthLayout sebagai wrapper untuk halaman login
+        // Anda bisa meneruskan title ke AuthLayout untuk judul di browser tab
+        // dan pageTitle untuk judul di dalam kotak form
+        <AuthLayout title="Login Mahasiswa" pageTitle="Login">
+            {' '}
+            {/* Contoh: "Login Mahasiswa" di tab, "Login" di form */}
+            <div className="pb-4">
+                <form onSubmit={submit} className="pb-7">
+                    {/* Input NIM */}
+                    <div className="mb-8">
+                        <label htmlFor="nim" className="mb-3 block text-[18px] font-bold text-gray-700">
+                            NIM
+                        </label>
+                        <input
+                            type="text"
+                            name="nim"
+                            id="nim"
+                            value={data.nim}
+                            className="focus:ring-opacity-50 mt-1 block h-11 w-full rounded-md border-gray-300 pl-3 text-[18px] text-black shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200"
+                            autoComplete="username"
+                            onChange={onHandleChange}
                             required
                             autoFocus
-                            tabIndex={1}
-                            autoComplete="email"
-                            value={data.email}
-                            onChange={(e) => setData('email', e.target.value)}
-                            placeholder="email@example.com"
                         />
-                        <InputError message={errors.email} />
+                        {errors.nim && <div className="mt-3 text-sm text-red-500">{errors.nim}</div>}
                     </div>
 
-                    <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">Password</Label>
-                            {canResetPassword && (
-                                <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                    Forgot password?
-                                </TextLink>
-                            )}
-                        </div>
-                        <Input
-                            id="password"
+                    {/* Input Password */}
+                    <div className="mb-6">
+                        <label htmlFor="password" className="mb-3 block text-[18px] font-bold text-gray-700">
+                            Password
+                        </label>
+                        <input
                             type="password"
-                            required
-                            tabIndex={2}
-                            autoComplete="current-password"
+                            name="password"
+                            id="password"
                             value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            placeholder="Password"
+                            className="focus:ring-opacity-50 mt-1 block h-11 w-full rounded-md border-gray-300 pl-3 text-[18px] text-black shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200"
+                            autoComplete="current-password"
+                            onChange={onHandleChange}
+                            required
                         />
-                        <InputError message={errors.password} />
+                        {errors.password && <div className="mt-1 text-sm text-red-500">{errors.password}</div>}
                     </div>
 
-                    <div className="flex items-center space-x-3">
-                        <Checkbox
-                            id="remember"
-                            name="remember"
-                            checked={data.remember}
-                            onClick={() => setData('remember', !data.remember)}
-                            tabIndex={3}
-                        />
-                        <Label htmlFor="remember">Remember me</Label>
-                    </div>
+                    {/* Tombol Sign In */}
+                    <button
+                        type="submit"
+                        className="w-full rounded-md border border-transparent bg-gray-800 px-4 py-2 text-lg font-medium text-white shadow-sm hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
+                        disabled={processing}
+                    >
+                        Sign In
+                    </button>
+                </form>
 
-                    <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Log in
-                    </Button>
-                </div>
-
-                <div className="text-center text-sm text-muted-foreground">
-                    Don't have an account?{' '}
-                    <TextLink href={route('register')} tabIndex={5}>
-                        Sign up
-                    </TextLink>
-                </div>
-            </form>
-
-            {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
+                <a href="register" className="text-gray-500 hover:text-gray-700">
+                    Belum punya akun? Daftar sekarang
+                </a>
+            </div>
         </AuthLayout>
     );
 }
