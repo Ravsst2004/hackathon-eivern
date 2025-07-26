@@ -18,11 +18,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Student } from '@/types/model';
+import { StudentType } from '@/types/model';
 import { Head } from '@inertiajs/react';
 
 // Mock data
-const initialStudents: Student[] = [
+const initialStudents: StudentType[] = [
     {
         id: '1',
         nim: '2021001001',
@@ -83,11 +83,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function StudentAccounts() {
-    const [students, setStudents] = useState<Student[]>(initialStudents);
+    const [students, setStudents] = useState<StudentType[]>(initialStudents);
     const [searchTerm, setSearchTerm] = useState('');
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const [editingStudent, setEditingStudent] = useState<Student | undefined>();
-    const [deletingStudent, setDeletingStudent] = useState<Student | undefined>();
+    const [editingStudent, setEditingStudent] = useState<StudentType | undefined>();
+    const [deletingStudent, setDeletingStudent] = useState<StudentType | undefined>();
     const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
 
     const filteredStudents = students.filter(
@@ -104,13 +104,13 @@ export default function StudentAccounts() {
         setIsFormOpen(true);
     };
 
-    const handleEditStudent = (student: Student) => {
+    const handleEditStudent = (student: StudentType) => {
         setFormMode('edit');
         setEditingStudent(student);
         setIsFormOpen(true);
     };
 
-    const handleDeleteStudent = (student: Student) => {
+    const handleDeleteStudent = (student: StudentType) => {
         setDeletingStudent(student);
     };
 
@@ -121,7 +121,7 @@ export default function StudentAccounts() {
         }
     };
 
-    const handleFormSubmit = (studentData: Student) => {
+    const handleFormSubmit = (studentData: StudentType) => {
         if (formMode === 'create') {
             const newStudent = {
                 ...studentData,

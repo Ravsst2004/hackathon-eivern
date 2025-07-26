@@ -7,30 +7,21 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { StudentType } from '@/types/model';
 import { useState } from 'react';
 import { Textarea } from '../ui/textarea';
 
-interface Student {
-    id?: string;
-    nim: string;
-    nama: string;
-    email: string;
-    jurusan: string;
-    angkatan: string;
-    status: string;
-    alamat: string;
-}
-
 interface StudentFormProps {
-    student?: Student;
+    student?: StudentType;
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (student: Student) => void;
+    onSubmit: (student: StudentType) => void;
     mode: 'create' | 'edit';
 }
 
 export function StudentForm({ student, isOpen, onClose, onSubmit, mode }: StudentFormProps) {
-    const [formData, setFormData] = useState<Student>({
+    const [formData, setFormData] = useState<StudentType>({
+        id: '',
         nim: student?.nim || '',
         nama: student?.nama || '',
         email: student?.email || '',
@@ -46,6 +37,7 @@ export function StudentForm({ student, isOpen, onClose, onSubmit, mode }: Studen
         onClose();
         // Reset form
         setFormData({
+            id: '',
             nim: '',
             nama: '',
             email: '',
@@ -56,7 +48,7 @@ export function StudentForm({ student, isOpen, onClose, onSubmit, mode }: Studen
         });
     };
 
-    const handleChange = (field: keyof Student, value: string) => {
+    const handleChange = (field: keyof StudentType, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 

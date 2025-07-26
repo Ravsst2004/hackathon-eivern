@@ -1,12 +1,12 @@
-import { Student } from '@/types/model';
+import { StudentType } from '@/types/model';
 import { Edit, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 interface StudentTableProps {
-    filteredStudents: Student[];
-    handleEditStudent: (student: Student) => void;
-    handleDeleteStudent: (student: Student) => void;
+    filteredStudents: StudentType[];
+    handleEditStudent: (student: StudentType) => void;
+    handleDeleteStudent: (student: StudentType) => void;
     searchTerm: string;
 }
 
