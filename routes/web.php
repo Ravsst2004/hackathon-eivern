@@ -7,6 +7,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\EventDetailController;
 use App\Http\Controllers\Auth\RequestAccountUserController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\InfoController;
 use App\Http\Controllers\Sertifikat\SertifikatController;
 
 // Route::get('/', function () {

@@ -114,4 +114,21 @@ class SertifikatController extends Controller
             return back()->with('success', 'Sertifikat berhasil di approve.');
         }
     }
+    public function indexParaf()
+    {
+        $user = Auth::user();
+        if ($user->role == Roles::BEM->value) {
+            $sertifikat = SertifikatEvent::where('paraf_bem', Status::REQUEST->value)->get();
+        } elseif ($user->role == Roles::KEMAHASISWAAN->value) {
+            $sertifikat = SertifikatEvent::where('paraf_kemahasiswaan', Status::REQUEST->value)->get();
+        } elseif ($user->role == Roles::SUPER_ADMIN->value) {
+            $sertifikat = SertifikatEvent::where(function ($query) {
+                $query->where('paraf_bem', Status::REQUEST->value)
+                    ->orWhere('paraf_kemahasiswaan', Status::REQUEST->value);
+            })->get();
+        } else {
+            $sertifikat = [];
+        }
+        return inertia('paraf-request', compact('sertifikat'));
+    }
 }
