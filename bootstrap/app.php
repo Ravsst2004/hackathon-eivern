@@ -1,12 +1,8 @@
 <?php
 
+use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\IsBem;
-use App\Http\Middleware\IsKemahasiswaan;
-use App\Http\Middleware\IsMahasiswa;
-use App\Http\Middleware\IsOrmawa;
-use App\Http\Middleware\IsSuperAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -27,11 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // );
 
         $middleware->alias([
-            'isBem' => IsBem::class,
-            'isKemahasiswaan' => IsKemahasiswaan::class,
-            'isOrmawa' => IsOrmawa::class,
-            'isSuperAdmin' => IsSuperAdmin::class,
-            'isMahasiswa' => IsMahasiswa::class
+            'role' => CheckRole::class,
         ]);
         $middleware->web(append: [
             HandleAppearance::class,

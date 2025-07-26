@@ -1,3 +1,4 @@
+
 <?php
 
 use Inertia\Inertia;
@@ -21,14 +22,15 @@ Route::get('/all-events', function () {
     return Inertia::render('Events/AllEvents'); // Atau cukup 'LandingPage' jika itu berfungsi
 })->name('all-events');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:SUPER_ADMIN,BEM,ORMAWA,KEMAHASISWAAN'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
-    })->name('dashboard');
+    })->name('dashboard')->middleware('');
+
     Route::resource('ormawa', OrmawaController::class);
 
 
-    Route::middleware([])->group(function () {
+    Route::middleware()->group(function () {
         Route::get('/request-paraf', [SertifikatController::class, 'indexParaf'])->name('sertifikat.index');
         Route::patch('/approve-paraf', [SertifikatController::class, 'approveParaf'])->name('sertifikat.approve');
         Route::put('/generate-uniq-id', [SertifikatController::class, 'uniqIdGenerate'])
