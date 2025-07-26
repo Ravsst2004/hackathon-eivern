@@ -21,7 +21,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('ormawa_id')->references('id')->on('ormawa')->onDelete('cascade');
+            $table->foreign('ormawa_id')->references('id')->on('ormawas')->onDelete('cascade');
         });
     }
 
