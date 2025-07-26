@@ -33,7 +33,7 @@ export default function Login() {
         <AuthLayout title="Login Mahasiswa" pageTitle="Login">
             {' '}
             {/* Contoh: "Login Mahasiswa" di tab, "Login" di form */}
-            <div className="pb-4">
+            <div className="items-center justify-center pb-4">
                 <form onSubmit={submit} className="pb-7">
                     {/* Input NIM */}
                     <div className="mb-8">

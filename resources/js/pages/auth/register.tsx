@@ -2,7 +2,7 @@
 
 import AuthLayout from '@/layouts/auth-layout';
 import { useForm } from '@inertiajs/react';
-import React, { FormEvent, useEffect, useState } from 'react'; // Import useState
+import React, { FormEvent, useEffect, useState } from 'react';
 
 export default function Login() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -11,14 +11,14 @@ export default function Login() {
         remember: false,
     });
 
-    // State baru untuk mengontrol tampilan form atau pesan sukses
-    const [verificationSent, setVerificationSent] = useState(false);
+    // State untuk mengontrol apakah form sudah disubmit (dan diganti dengan pesan)
+    const [submissionInitiated, setSubmissionInitiated] = useState(false);
 
     useEffect(() => {
         return () => {
             reset('email');
             // Pastikan state kembali ke false saat komponen di-unmount atau direset
-            setVerificationSent(false);
+            setSubmissionInitiated(false);
         };
     }, []);
 
@@ -28,30 +28,23 @@ export default function Login() {
 
     const submit = (e: FormEvent) => {
         e.preventDefault();
-        // Mengubah state menjadi true untuk menampilkan pesan sukses dan menyembunyikan form
-        // Ini akan dilakukan langsung setelah tombol diklik, terlepas dari hasil backend
-        setVerificationSent(true);
+        // Segera ubah tampilan setelah tombol diklik
+        setSubmissionInitiated(true);
 
         // Lakukan post ke route login
         post(route('login'), {
-            // Kita tidak perlu melakukan apapun di onSuccess, karena tampilan sudah berubah
             onSuccess: () => {
-                // Anda bisa menambahkan logika tambahan di sini jika diperlukan setelah sukses,
-                // misalnya menampilkan notifikasi sukses spesifik jika ada dari backend.
+                // Tidak perlu mengubah state backendSuccess di sini lagi
+                // karena tombol akan selalu muncul setelah submissionInitiated
             },
-            // Hapus atau kosongkan onError jika Anda tidak ingin kembali ke form pada error
             onError: () => {
-                // Saat ini, jika ada error, tampilan akan tetap pada pesan "Menunggu verifikasi..."
-                // Jika Anda ingin menampilkan pesan error di dalam tampilan ini, Anda perlu state tambahan
-                // untuk pesan error dan menampilkannya di bawah h2.
+                // Tampilan tetap pada pesan "menunggu verifikasi" bahkan jika ada error.
+                // Anda bisa menambahkan log error untuk debugging, tetapi tidak mengubah UI.
                 console.error('Verifikasi email gagal dikirim:', errors);
-                // setVerificationSent(false); // <--- Baris ini dihapus/dinonaktifkan
             },
-            // onFinish juga tidak perlu mengubah state verificationSent lagi
             onFinish: () => {
                 // Logika yang dijalankan setelah permintaan selesai (baik sukses atau gagal)
-                // Jika Anda hanya ingin tampilan berubah satu arah (dari form ke pesan),
-                // maka tidak perlu ada setVerificationSent(false) di sini.
+                // Tidak ada perubahan state UI di sini.
             },
         });
     };
@@ -60,13 +53,21 @@ export default function Login() {
         <AuthLayout title="Buat Akun Mahasiswa" pageTitle="Register">
             {/* Wrapper untuk menjaga ukuran form agar tidak berubah drastis */}
             <div className="flex min-h-[280px] flex-col items-center justify-center pb-4">
-                {verificationSent ? (
-                    // Tampilkan pesan sukses jika verifikasi telah diminta
-                    <h2 className="text-center text-xl font-semibold text-gray-800">Meminta verifikasi akun berhasil, menunggu verifikasi.</h2>
+                {submissionInitiated ? (
+                    // Tampilkan pesan verifikasi setelah submit
+                    <div className="text-center">
+                        <h2 className="mb-4 text-xl font-semibold text-gray-800">Meminta verifikasi akun berhasil, menunggu verifikasi.</h2>
+                        {/* Tombol "Kembali ke Landing Page" akan selalu tampil jika submissionInitiated true */}
+                        <a
+                            href={route('landing')} // Pastikan 'landing' adalah nama route landing page Anda
+                            className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-lg font-semibold tracking-widest text-white uppercase ring-gray-300 transition duration-150 ease-in-out hover:bg-gray-700 focus:border-gray-900 focus:ring focus:outline-none active:bg-gray-900 disabled:opacity-25"
+                        >
+                            Kembali ke Landing Page
+                        </a>
+                    </div>
                 ) : (
-                    // Tampilkan form jika verifikasi belum diminta
+                    // Tampilkan form jika belum disubmit
                     <form onSubmit={submit} className="w-full pb-7">
-                        {/* Tambahkan w-full agar form mengisi container */}
                         {/* Input NIM */}
                         <div className="mb-8">
                             <label htmlFor="nim" className="mb-3 block text-[18px] font-bold text-gray-700">
@@ -113,8 +114,8 @@ export default function Login() {
                     </form>
                 )}
 
-                {/* Link "Sudah punya akun?" tetap ada di luar conditional rendering form */}
-                {!verificationSent && ( // Hanya tampilkan jika form masih terlihat
+                {/* Link "Sudah punya akun?" hanya tampil jika form masih terlihat */}
+                {!submissionInitiated && (
                     <a href={route('register')} className="mt-4 text-gray-500 hover:text-gray-700">
                         Sudah punya akun?
                     </a>
