@@ -34,14 +34,17 @@ class RequestAccountUserController extends Controller
         return redirect()->back()->with('success', 'The Request has been sent, wait for the admin to approve');
     }
 
-    public function approveAccountPage ()
+    public function approveAccountPage()
     {
         $account = RequestAkses::All();
 
-        // return ni rav
+
+        return Inertia::render('account-request', [
+            'account' => $account
+        ]);
     }
 
-    public function approveAccount (string $id)
+    public function approveAccount(string $id)
     {
         $account = RequestAkses::findOrFail($id);
         $randomPassword = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -57,6 +60,5 @@ class RequestAccountUserController extends Controller
         $user->notify(new AccountForUser($account->nim, $randomPassword));
         $account->delete();
         return redirect()->back()->with('success', 'Akun berhasil dibuat dan notifikasi telah dikirim');
-
     }
 }

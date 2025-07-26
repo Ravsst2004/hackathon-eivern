@@ -1,45 +1,97 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { EventType } from '@/types/model';
+import { router, useForm } from '@inertiajs/react';
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect } from 'react';
+import InputError from '../input-error';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Textarea } from '../ui/textarea';
 
 interface EventFormProps {
-    event?: EventType;
+    event?: {
+        id: number | undefined | null;
+        nama: string;
+        logo: string | File;
+        deskripsi: string;
+        tanggal: string;
+        ormawa: number;
+    };
+    ormawaList: {
+        id: number;
+        nama: string;
+    }[];
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (event: EventType) => void;
     mode: 'create' | 'edit';
 }
 
-export function EventForm({ event, isOpen, onClose, onSubmit, mode }: EventFormProps) {
-    const [formData, setFormData] = useState<EventType>({
-        id: event?.id || '',
-        name: event?.name || '',
-        logo: event?.logo || '',
-        description: event?.description || '',
-        date: event?.date || new Date().toISOString().split('T')[0],
+export function EventForm({ event, ormawaList, isOpen, onClose, mode }: EventFormProps) {
+    const { data, setData, post, errors, reset } = useForm({
+        nama: event?.nama || '',
+        logo: '',
+        deskripsi: event?.deskripsi || '',
+        tanggal: event?.tanggal || new Date().toISOString().split('T')[0],
+        ormawa: event?.ormawa_id || '',
     });
+
+    useEffect(() => {
+        if (mode === 'edit' && event) {
+            setData({
+                nama: event.nama,
+                logo: '',
+                deskripsi: event.deskripsi,
+                tanggal: event.tanggal,
+                ormawa: event.ormawa_id,
+            });
+        }
+    }, [event, mode]);
+
+    console.log('Edit: ', event);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit({ ...formData, id: event?.id });
-        onClose();
-        // Reset form
-        setFormData({
-            id: '',
-            name: '',
-            logo: '',
-            description: '',
-            date: new Date().toISOString().split('T')[0],
-        });
-    };
 
-    const handleChange = (field: keyof EventType, value: string) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
+        if (mode === 'create') {
+            post(route('events.store'), {
+                onError: (errors) => {
+                    console.log(errors);
+                },
+                onSuccess: () => {
+                    onClose();
+                    reset();
+                },
+                onFinish: () => {
+                    console.log(data);
+                },
+                forceFormData: true,
+            });
+        } else if (mode === 'edit' && event?.id) {
+            router.post(
+                route('events.update', event.id),
+                {
+                    _method: 'put',
+                    nama: data.nama,
+                    logo: data.logo ?? null,
+                    deskripsi: data.deskripsi,
+                    tanggal: data.tanggal,
+                    ormawa: data.ormawa,
+                },
+                {
+                    onSuccess: () => {
+                        onClose();
+                        reset();
+                    },
+                    onError: (errors) => {
+                        console.log(errors);
+                    },
+                    forceFormData: true,
+                },
+            );
+        }
     };
 
     return (
@@ -53,58 +105,67 @@ export function EventForm({ event, isOpen, onClose, onSubmit, mode }: EventFormP
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Nama Event
-                            </Label>
-                            <Input
-                                id="name"
-                                value={formData.name}
-                                onChange={(e) => handleChange('name', e.target.value)}
-                                className="col-span-3"
-                                placeholder="Masukkan nama event"
-                                required
-                            />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="logo" className="text-right">
-                                URL Logo
-                            </Label>
-                            <Input
-                                id="logo"
-                                value={formData.logo}
-                                onChange={(e) => handleChange('logo', e.target.value)}
-                                className="col-span-3"
-                                placeholder="Masukkan URL logo"
-                                required
-                            />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="date" className="text-right">
-                                Tanggal
-                            </Label>
-                            <Input
-                                id="date"
-                                type="date"
-                                value={formData.date}
-                                onChange={(e) => handleChange('date', e.target.value)}
-                                className="col-span-3"
-                                required
-                            />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="description" className="text-right">
-                                Deskripsi
-                            </Label>
-                            <Textarea
-                                id="description"
-                                value={formData.description}
-                                onChange={(e) => handleChange('description', e.target.value)}
-                                className="col-span-3"
-                                placeholder="Masukkan deskripsi event"
-                                rows={3}
-                                required
-                            />
+                        {/* Informasi Event */}
+                        <div className="space-y-4">
+                            <h3 className="font-medium">Informasi Event</h3>
+                            <div>
+                                <Label htmlFor="nama">Nama Event</Label>
+                                <Input
+                                    id="nama"
+                                    value={data.nama}
+                                    onChange={(e) => setData('nama', e.target.value)}
+                                    placeholder="Masukkan nama event"
+                                    required
+                                />
+                                <InputError message={errors.nama} />
+                            </div>
+                            <div>
+                                <Label htmlFor="logo">Logo</Label>
+                                <Input
+                                    id="logo"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        setData('logo', file || '');
+                                    }}
+                                    required={mode === 'create'}
+                                />
+                                <InputError message={errors.logo} />
+                            </div>
+                            <div>
+                                <Label htmlFor="tanggal">Tanggal</Label>
+                                <Input id="tanggal" type="date" value={data.tanggal} onChange={(e) => setData('tanggal', e.target.value)} required />
+                                <InputError message={errors.tanggal} />
+                            </div>
+                            <div>
+                                <Label htmlFor="deskripsi">Deskripsi</Label>
+                                <Textarea
+                                    id="deskripsi"
+                                    value={data.deskripsi}
+                                    onChange={(e) => setData('deskripsi', e.target.value)}
+                                    placeholder="Masukkan deskripsi event"
+                                    rows={3}
+                                    required
+                                />
+                                <InputError message={errors.deskripsi} />
+                            </div>
+                            <div>
+                                <Label htmlFor="ormawa">Organisasi Mahasiswa</Label>
+                                <Select value={data.ormawa.toString()} onValueChange={(value) => setData('ormawa', parseInt(value))} required>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Pilih Organisasi" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {ormawaList.map((ormawa) => (
+                                            <SelectItem key={ormawa.id} value={ormawa.id.toString()}>
+                                                {ormawa.nama}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <InputError message={errors.ormawa} />
+                            </div>
                         </div>
                     </div>
                     <DialogFooter>

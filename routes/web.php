@@ -1,3 +1,4 @@
+
 <?php
 
 use Inertia\Inertia;
@@ -6,6 +7,7 @@ use App\Http\Controllers\OrmawaController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\EventDetailController;
 use App\Http\Controllers\Auth\RequestAccountUserController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\Sertifikat\SertifikatController;
 
 // Route::get('/', function () {
@@ -20,19 +22,21 @@ Route::get('/all-events', function () {
     return Inertia::render('Events/AllEvents'); // Atau cukup 'LandingPage' jika itu berfungsi
 })->name('all-events');
 
-Route::middleware(['auth', 'verified', 'isBem', 'isOrmawa', 'isKemahasiswaan', 'isSuperAdmin'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:SUPER_ADMIN,BEM,ORMAWA,KEMAHASISWAAN'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
-    })->name('dashboard');
+    })->name('dashboard')->middleware('');
+
     Route::resource('ormawa', OrmawaController::class);
 
 
-    Route::middleware(['isBem', 'isKemahasiswaan', 'isSuperAdmin'])->group(function () {
+    Route::middleware()->group(function () {
         Route::get('/request-paraf', [SertifikatController::class, 'indexParaf'])->name('sertifikat.index');
         Route::patch('/approve-paraf', [SertifikatController::class, 'approveParaf'])->name('sertifikat.approve');
         Route::put('/generate-uniq-id', [SertifikatController::class, 'uniqIdGenerate'])
-                ->name('ormawa.generate-uniq-id');
+            ->name('ormawa.generate-uniq-id');
         Route::post('/account-request/{id}', [RequestAccountUserController::class, 'approveAccount'])->name('account-request.approve');
+        Route::resource('events', EventController::class);
     });
 
     Route::middleware(['isOrmawa'])->group(function () {
@@ -47,5 +51,5 @@ Route::patch('/paraf-request', [RequestAccountUserController::class, 'requestPar
 Route::get('/account-request', [RequestAccountUserController::class, 'approveAccountPage'])->name('account-request');
 
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';

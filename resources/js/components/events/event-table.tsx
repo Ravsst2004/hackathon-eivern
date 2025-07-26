@@ -4,7 +4,7 @@ import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 interface EventTableProps {
-    filteredEvents: EventType[];
+    filteredEvents: any; // fuct u type
     handleEditEvent: (event: EventType) => void;
     handleDeleteEvent: (event: EventType) => void;
     searchTerm: string;
@@ -34,11 +34,11 @@ export default function EventTable({ filteredEvents, handleEditEvent, handleDele
                         filteredEvents.map((event) => (
                             <TableRow key={event.id}>
                                 <TableCell className="text-center">
-                                    {event.logo && <img src={event.logo} alt={event.name} className="h-10 w-10 rounded-full object-cover" />}
+                                    {event.logo && <img src={event.logo} alt={event.nama} className="h-10 w-10 rounded-full object-cover" />}
                                 </TableCell>
-                                <TableCell className="font-medium">{event.name}</TableCell>
-                                <TableCell className="font-medium">{event.description}</TableCell>
-                                <TableCell className="font-medium">{new Date(event.date).toLocaleDateString()}</TableCell>
+                                <TableCell className="font-medium">{event.nama}</TableCell>
+                                <TableCell className="font-medium">{event.deskripsi}</TableCell>
+                                <TableCell className="font-medium">{new Date(event.tanggal).toLocaleDateString()}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end space-x-2">
                                         <Button variant="ghost" size="icon" onClick={() => handleEditEvent(event)}>

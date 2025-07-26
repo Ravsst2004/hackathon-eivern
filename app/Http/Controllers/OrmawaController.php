@@ -18,18 +18,19 @@ class OrmawaController extends Controller
      */
     public function index()
     {
-        $ormawa = Ormawa::with('user', 'jurusan', 'role')->paginate(5);
+        $ormawa = Ormawa::with('user')->paginate(5);
         $jurusan = Jurusan::all();
-        return view('ormawa.index', compact('ormawa'));
+
+        return inertia('ormawa', [
+            'ormawa' => $ormawa,
+            'jurusan' => $jurusan
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -39,31 +40,32 @@ class OrmawaController extends Controller
         $user = Auth::user();
         $request->validate([
             'name' => 'required',
-            'logo' => 'required, image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'deskripsi' => 'required, string',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'deskripsi' => 'required|string',
             'nameUser' => 'required',
-            'nim' => 'required, max:16',
-            'email' => 'required, email',
-            'idJurusan' => 'required, exists:jurusan,id',
+            'nim' => 'required|max:16',
+            'email' => 'required|email',
+            'idJurusan' => 'required|exists:jurusan,id',
         ]);
 
-        if($request->hasFile('logo')) {
+        if ($request->hasFile('logo')) {
             $path = $request->file('logo')->store('ormawa', 'public');
         }
-        
-        $user = User::create([
+
+        $userRegis = User::create([
+            "nim" => $request->nim,
             'name' => $request->nameUser,
             'email' => $request->email,
             'password' => bcrypt($request->nim),
             'id_jurusan' => $request->idJurusan,
             'id_role' => Role::where('nama', Roles::ORMAWA->value)->first()->id,
-            ]);
-        
+        ]);
+
         $ormawa = Ormawa::create([
             'nama' => $request->name,
             'logo' => $path,
             'deskripsi' => $request->deskripsi,
-            'user_id' => $user->nim
+            'user_id' => $userRegis->nim
         ]);
 
         return back()->with('success', 'Success Creating Ormawa');
@@ -90,7 +92,7 @@ class OrmawaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-            $request->validate([
+        $request->validate([
             'name' => 'required',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'deskripsi' => 'required|string',
@@ -101,7 +103,7 @@ class OrmawaController extends Controller
         ]);
 
         $ormawa = Ormawa::findOrFail($id);
-        $user = User::where('id_ormawa', $ormawa->id)->firstOrFail();
+        $user = $ormawa->user;
 
         // Handle logo update jika ada file baru
         if ($request->hasFile('logo')) {
@@ -117,7 +119,7 @@ class OrmawaController extends Controller
 
 
         // Update data ormawa
-        $ormawa->name = $request->name;
+        $ormawa->nama = $request->name;
         $ormawa->deskripsi = $request->deskripsi;
         $ormawa->save();
 
