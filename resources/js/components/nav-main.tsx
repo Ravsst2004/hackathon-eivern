@@ -53,6 +53,11 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                                 <Link href="/account-request">Request Accounts</Link>
                                             </SidebarMenuButton>
                                         </SidebarMenuSubItem>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuButton asChild>
+                                                <Link href="/request-uniq-id">Request Uniq Id</Link>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuSubItem>
                                     </SidebarMenuSub>
                                 </CollapsibleContent>
                             </SidebarMenuItem>

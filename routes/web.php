@@ -8,6 +8,7 @@ use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\EventDetailController;
 use App\Http\Controllers\Auth\RequestAccountUserController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\InfoController;
 use App\Http\Controllers\Sertifikat\SertifikatController;
 
 // Route::get('/', function () {
@@ -15,7 +16,7 @@ use App\Http\Controllers\Sertifikat\SertifikatController;
 // })->name('landing');
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
-Route::get('/event/{id}', [EventDetailController::class, 'show'])->name('events.show');
+Route::get('/event/{event}', [EventDetailController::class, 'show'])->name('events.show');
 
 
 Route::get('/all-events', function () {
@@ -26,6 +27,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+    Route::get('profile', [InfoController::class, 'index'])->name('profile.edit');
+
+
+
     Route::resource('ormawa', OrmawaController::class);
 
 
@@ -39,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/utilities/{id}/edit', [UtilityController::class, 'edit'])->name('utilities.edit');
         Route::put('/utilities/{id}', [UtilityController::class, 'update'])->name('utilities.update');
         Route::resource('events', EventController::class);
+        Route::get('/request-uniq-id', [SertifikatController::class, 'requestUniqIdIndex'])->name('sertifikat.request');
     });
 
     Route::middleware(['isOrmawa'])->group(function () {
@@ -47,6 +53,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+
+Route::put('/upload-sertifikat', [SertifikatController::class, 'uploadSertifikat'])->name('sertifikat.upload'); 
 
 Route::patch('/paraf-request', [RequestAccountUserController::class, 'requestParafBem'])->name('paraf.request')->middleware('isMahasiswa');
 Route::get('/account-request', [RequestAccountUserController::class, 'approveAccountPage'])->name('account-request');

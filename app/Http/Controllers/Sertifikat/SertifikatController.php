@@ -51,6 +51,14 @@ class SertifikatController extends Controller
         return back()->with('success', 'Uniq ID berhasil di generate.');
     }
 
+    public function requestUniqIdIndex()
+    {
+        $data = Event::with(['sertifikatEvents' => function ($query) {
+            $query->whereNull('id_uniq_sertif');
+        }])->get();
+        return inertia('uniqid-request', compact('data'));
+    }
+
     public function uploadSertifikat(Request $request)
     {
         $user = Auth::user();

@@ -1,9 +1,9 @@
 import { Link } from '@inertiajs/react';
 
-// Tipe data untuk event, bisa diimpor dari file terpisah jika digunakan di banyak tempat
+// DIUBAH: Sesuaikan tipe data agar cocok dengan data dari controller
 interface Event {
     id: number;
-    title: string;
+    nama: string; // Menggunakan 'nama' bukan 'title'
     // tambahkan properti lain jika perlu
 }
 
@@ -12,7 +12,7 @@ interface SidebarProps {
 }
 
 export default function OtherEventsSidebar({ events }: SidebarProps) {
-    if (events.length === 0) {
+    if (!events || events.length === 0) {
         return null; // Jangan render apa-apa jika tidak ada event lain
     }
 
@@ -24,9 +24,10 @@ export default function OtherEventsSidebar({ events }: SidebarProps) {
                     <Link
                         key={event.id}
                         href={route('events.show', event.id)}
-                        className="block rounded-md bg-gray-100 p-4 transition hover:bg-gray-200"
+                        className="block rounded-md bg-gray-50 p-4 transition hover:bg-gray-100"
                     >
-                        <p className="font-semibold text-gray-700">{event.title}</p>
+                        {/* DIUBAH: Tampilkan event.nama */}
+                        <p className="font-semibold text-gray-700">{event.nama}</p>
                     </Link>
                 ))}
             </div>
