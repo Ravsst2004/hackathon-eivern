@@ -14,14 +14,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-           RoleSeeder::class,
-           JurusanSeeder::class,
-           UserSeeder::class,
-           UtilitySeeder::class,
-           OrmawaSeeder::class,
-           EventSeeder::class,
-           PembicaraEventSeeder::class
-           
+            RoleSeeder::class,
+            JurusanSeeder::class,
+            UserSeeder::class,
+            UtilitySeeder::class,
+            EventSeeder::class,
+            PembicaraEventSeeder::class
         ]);
     }
 }

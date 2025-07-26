@@ -132,4 +132,6 @@ class SertifikatController extends Controller
         }
         return view('sertifikat.paraf-bem', compact('sertifikat'));
     }
+
+
 }

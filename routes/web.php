@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrmawaController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\EventDetailController;
 use App\Http\Controllers\Auth\RequestAccountUserController;
 use App\Http\Controllers\EventController;
@@ -34,6 +35,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/generate-uniq-id', [SertifikatController::class, 'uniqIdGenerate'])
             ->name('ormawa.generate-uniq-id');
         Route::post('/account-request/{id}', [RequestAccountUserController::class, 'approveAccount'])->name('account-request.approve');
+        // util
+        Route::get('/utilities/{id}/edit', [UtilityController::class, 'edit'])->name('utilities.edit');
+        Route::put('/utilities/{id}', [UtilityController::class, 'update'])->name('utilities.update');
         Route::resource('events', EventController::class);
     });
 
@@ -42,7 +46,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/export-sertifikat/{eventId}', [SertifikatController::class, 'exportToexcel'])->name('sertifikat.export');
     });
 });
-
 
 
 Route::patch('/paraf-request', [RequestAccountUserController::class, 'requestParafBem'])->name('paraf.request')->middleware('isMahasiswa');
