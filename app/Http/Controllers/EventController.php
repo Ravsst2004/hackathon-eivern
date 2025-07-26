@@ -59,6 +59,11 @@ class EventController extends Controller
 
 
         $user = Auth::user();
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('ormawa', 'public');
+            $validated['logo'] = $path; // simpan path ke DB
+        }
+
         $validated['ormawa_id'] = $request->ormawa;
 
         Event::create($validated);
@@ -107,6 +112,12 @@ class EventController extends Controller
             'deskripsi' => 'required|string',
             'tanggal' => 'required|date',
         ]);
+
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('ormawa', 'public');
+            $validated['logo'] = $path; // simpan path ke DB
+        }
+
 
         $event->update($validated);
 

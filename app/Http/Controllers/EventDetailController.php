@@ -39,7 +39,7 @@ class EventDetailController extends Controller
         return Inertia::render('Events/Index', [
             'event' => $event,
             'otherEvents' => $otherEvents,
-            'sertifikat' => $sertifikat
+            'sertifikat' => $sertifikat ?? []
         ]);
     }
 }

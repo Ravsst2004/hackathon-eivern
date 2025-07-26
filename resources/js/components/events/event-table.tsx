@@ -111,7 +111,9 @@ export default function EventTable({ filteredEvents, handleEditEvent, handleDele
                             return (
                                 <TableRow key={event.id}>
                                     <TableCell className="text-center">
-                                        {event.logo && <img src={event.logo} alt={event.nama} className="h-10 w-10 rounded-full object-cover" />}
+                                        {event.logo && (
+                                            <img src={`/storage/${event.logo}`} alt={event.nama} className="h-10 w-10 rounded-full object-cover" />
+                                        )}
                                     </TableCell>
                                     <TableCell className="font-medium">{event.nama}</TableCell>
                                     <TableCell className="font-medium">{event.deskripsi}</TableCell>

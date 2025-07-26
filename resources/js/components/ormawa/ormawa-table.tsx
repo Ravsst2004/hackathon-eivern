@@ -37,7 +37,9 @@ export default function OrmawaTable({ filteredOrmawa, handleEditOrmawa, handleDe
                         filteredOrmawa.map((ormawa) => (
                             <TableRow key={ormawa.id}>
                                 <TableCell className="text-center">
-                                    {ormawa.logo && <img src={ormawa.logo} alt={ormawa.nama} className="h-10 w-10 rounded-full object-cover" />}
+                                    {ormawa.logo && (
+                                        <img src={`/storage/${ormawa.logo}`} alt={ormawa.nama} className="h-10 w-10 rounded-full object-cover" />
+                                    )}
                                 </TableCell>
                                 <TableCell className="font-medium">{ormawa.nama}</TableCell>
                                 <TableCell className="font-medium">{ormawa.deskripsi}</TableCell>
