@@ -1,6 +1,8 @@
 import GuestLayout from '@/layouts/guest-layout';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
+// Hapus import sidebar untuk sementara jika belum dibuat
+// import OtherEventsSidebar from '@/components/events/OtherEventsSidebar';
 
 // --- Tipe Data Disesuaikan dengan Controller ---
 interface Ormawa {
@@ -11,7 +13,7 @@ interface Ormawa {
 interface Pembicara {
     id: number;
     nama: string;
-    jabatan: string; // Asumsi ada field 'jabatan'
+    jabatan?: string; // Jabatan bisa jadi null
 }
 
 interface PembicaraEvent {
@@ -21,13 +23,12 @@ interface PembicaraEvent {
 
 interface Event {
     id: number;
-    nama: string; // DIUBAH: dari title
-    deskripsi: string; // DIUBAH: dari description
-    logo: string; // DIUBAH: dari image_url
+    nama: string;
+    deskripsi: string;
+    logo: string;
     tanggal: string;
-    ormawa: Ormawa;
-    pembicara_events: PembicaraEvent[]; // DIUBAH: nama relasi dari Eloquent
-    // Asumsi 'certificate_info' tidak ada di database, kita akan beri fallback
+    ormawa?: Ormawa; // Jadikan opsional untuk mencegah error jika relasi gagal dimuat
+    pembicara_events?: PembicaraEvent[];
 }
 
 interface PageProps {
@@ -40,6 +41,7 @@ export default function EventShow({ event, otherEvents }: PageProps) {
 
     // Fungsi untuk memformat tanggal
     const formatDate = (dateString: string) => {
+        if (!dateString) return 'Tanggal tidak tersedia';
         const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('id-ID', options);
     };
@@ -82,15 +84,23 @@ export default function EventShow({ event, otherEvents }: PageProps) {
         }
     };
 
+    // Fallback jika data event belum termuat
+    if (!event) {
+        return (
+            <GuestLayout>
+                <div>Memuat data event...</div>
+            </GuestLayout>
+        );
+    }
+    console.log({ event, otherEvents });
+
     return (
         <GuestLayout>
             <Head title={event.nama} />
 
             <div className="container mx-auto my-8 px-4 lg:my-16">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-                    {/* Kolom Kiri - Konten Utama */}
                     <main className="lg:col-span-2">
-                        {/* Gambar Event */}
                         <div className="mb-6 h-80 w-full overflow-hidden rounded-lg bg-gray-200">
                             {event.logo ? (
                                 <img src={`/storage/logos/${event.logo}`} alt={event.nama} className="h-full w-full object-cover" />
@@ -108,15 +118,18 @@ export default function EventShow({ event, otherEvents }: PageProps) {
                             )}
                         </div>
 
-                        {/* Judul dan Info Tambahan */}
                         <h1 className="mb-2 text-4xl font-bold text-gray-900">{event.nama}</h1>
                         <div className="mb-6 flex items-center space-x-4 text-gray-600">
-                            <span>{/* Diselenggarakan oleh <strong>{event.ormawa.nama}</strong> */}</span>
-                            <span>•</span>
+                            {/* DIUBAH: Tampilkan nama ormawa jika ada */}
+                            {event.ormawa && (
+                                <span>
+                                    Diselenggarakan oleh <strong>{event.ormawa.nama}</strong>
+                                </span>
+                            )}
+                            {event.ormawa && <span>•</span>}
                             <span>{formatDate(event.tanggal)}</span>
                         </div>
 
-                        {/* Kontainer Tab */}
                         <div className="mt-8">
                             <div className="border-b border-gray-200">
                                 <nav className="-mb-px flex space-x-4" aria-label="Tabs">
@@ -144,8 +157,7 @@ export default function EventShow({ event, otherEvents }: PageProps) {
                         </div>
                     </main>
 
-                    {/* Kolom Kanan - Sidebar */}
-                    <aside>{/* <OtherEventsSidebar /> */}</aside>
+                    <aside>{/* <OtherEventsSidebar events={otherEvents} /> */}</aside>
                 </div>
             </div>
         </GuestLayout>

@@ -13,7 +13,7 @@ use App\Http\Controllers\Auth\RequestAccountUserController;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
-// Route::get('/event/{id}', [EventDetailController::class, 'show']);
+
 
 Route::get('/all-events', function () {
     return Inertia::render('Events/AllEvents'); // Atau cukup 'LandingPage' jika itu berfungsi

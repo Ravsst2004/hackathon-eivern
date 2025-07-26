@@ -26,7 +26,7 @@ class EventDetailController extends Controller
                             ->latest()
                             ->take(5)
                             ->get();
-        
+        // dd($event->toArray(), $otherEvents->toArray());
         // DIUBAH: Gunakan Inertia::render untuk menampilkan komponen frontend
         // dan kirim data '$event' dan '$otherEvents' sebagai props.
         return Inertia::render('Events/Index', [
