@@ -1,12 +1,29 @@
-// resources/js/pages/LandingPage/index.tsx
-
 import EventsGridSection from '@/components/landing/EventGridSection';
 import GuestLayout from '@/layouts/guest-layout';
 import { Head, Link } from '@inertiajs/react';
 
-// Import komponen EventsGridSection yang sudah kita buat
+// Definisikan tipe data untuk event sesuai dengan struktur JSON dari controller
+interface Ormawa {
+    id: number;
+    nama: string;
+    logo: string;
+}
 
-export default function LandingPage() {
+interface Event {
+    id: number;
+    nama: string;
+    logo: string;
+    deskripsi: string;
+    tanggal: string;
+    ormawa: Ormawa;
+}
+
+// Definisikan tipe untuk props halaman
+interface LandingPageProps {
+    events: Event[];
+}
+
+export default function LandingPage({ events }: LandingPageProps) {
     return (
         <GuestLayout>
             <Head>
@@ -15,7 +32,7 @@ export default function LandingPage() {
                 <meta property="og:title" content="SISKA - Sistem Informasi SKKM Akademik" />
                 <meta property="og:description" content="Kelola event dan SKKM Anda dengan mudah." />
                 <meta property="og:image" content="/images/og-image.jpg" />
-                <meta property="og:url" content={route('landing-page')} />
+                <meta property="og:url" content={route('landing')} />
             </Head>
 
             {/* Bagian Hero Section */}
@@ -34,10 +51,8 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* Implementasi EventsGridSection di sini */}
-            <EventsGridSection />
-
-            {/* Anda bisa menambahkan bagian lain dari landing page di bawah ini, jika ada */}
+            {/* Implementasi EventsGridSection, sekarang dengan data dari props */}
+            <EventsGridSection events={events} />
         </GuestLayout>
     );
 }

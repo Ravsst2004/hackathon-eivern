@@ -1,86 +1,51 @@
-// resources/js/components/LandingPage/EventsGridSection.tsx
-
+import EventCard from '@/components/landing/EventCard';
 import { Link } from '@inertiajs/react';
-// Pastikan path import ini benar berdasarkan lokasi EventCard.tsx Anda
-import EventCard from '@/components/landing/EventCard'; // Atau '@/components/LandingPage/EventCard' jika itu lokasinya
+
+// Definisikan tipe data agar sesuai dengan data yang diterima
+interface Ormawa {
+    id: number;
+    nama: string;
+    logo: string;
+}
 
 interface Event {
     id: number;
-    imageUrl: string;
-    title: string;
-    description: string;
-    detailLink: string; // URL untuk melihat detail acara
+    nama: string;
+    logo: string;
+    deskripsi: string;
+    tanggal: string;
+    ormawa: Ormawa;
 }
 
-const dummyEvents: Event[] = [
-    {
-        id: 1,
-        imageUrl: '',
-        title: 'Workshop Pemrograman Web Lanjut',
-        description: 'Pelajari framework terbaru dalam pengembangan web. Ikuti workshop intensif ini!',
-        detailLink: '#',
-    }, // Ganti dengan '#'
-    {
-        id: 2,
-        imageUrl: '',
-        title: 'Seminar Karir Digital Marketing',
-        description: 'Dapatkan insight dari ahli digital marketing. Persiapkan karir Anda di era digital.',
-        detailLink: '#',
-    }, // Ganti dengan '#'
-    {
-        id: 3,
-        imageUrl: '',
-        title: 'Kompetisi Ide Bisnis Inovatif',
-        description: 'Adu ide brilian Anda dan menangkan hadiah menarik. Terbuka untuk semua jurusan.',
-        detailLink: '#',
-    }, // Ganti dengan '#'
-    {
-        id: 4,
-        imageUrl: '',
-        title: 'Diskusi Panel: Masa Depan AI',
-        description:
-            'Ikuti diskusi mendalam tentang perkembangan dan dampak Artificial Intelligence.Ikuti diskusi mendalam tentang perkembangan dan dampak Artificial Intelligence.Ikuti diskusi mendalam tentang perkembangan dan dampak Artificial Intelligence.',
-        detailLink: '#',
-    }, // Ganti dengan '#'
-    {
-        id: 5,
-        imageUrl: '',
-        title: 'Pelatihan Desain Grafis Dasar',
-        description: 'Pelajari dasar-dasar desain grafis menggunakan tools populer. Cocok untuk pemula.',
-        detailLink: '#',
-    }, // Ganti dengan '#'
-    {
-        id: 6,
-        imageUrl: '',
-        title: 'Webinar Produktivitas Mahasiswa',
-        description: 'Tips dan trik untuk meningkatkan produktivitas dan manajemen waktu selama kuliah.',
-        detailLink: '#',
-    }, // Ganti dengan '#'
-];
+interface EventsGridProps {
+    events: Event[];
+}
 
-export default function EventsGridSection() {
+export default function EventsGridSection({ events }: EventsGridProps) {
     return (
         <section className="container mx-auto px-4 py-12">
             {/* Judul Bagian */}
             <div className="mb-12 text-center">
-                <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
-                    <div className="mx-auto h-8 w-1/2 rounded bg-gray-300"></div> {/* Placeholder Judul 1 */}
-                </h2>
+                <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">Acara & Kegiatan Terbaru</h2>
                 <p className="mx-auto max-w-xl text-lg text-gray-700">
-                    <div className="mx-auto mb-2 h-5 w-3/4 rounded bg-gray-200"></div> {/* Placeholder Deskripsi 1 */}
-                    <div className="mx-auto h-5 w-1/2 rounded bg-gray-200"></div> {/* Placeholder Deskripsi 2 */}
+                    Jangan lewatkan berbagai acara menarik yang akan datang untuk menambah wawasan dan pengalaman Anda.
                 </p>
             </div>
 
             {/* Grid Acara */}
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {dummyEvents.map((event) => (
+                {/* Loop data 'events' dari props, bukan lagi dummy data */}
+                {/* Batasi hanya 6 event yang tampil di landing page */}
+                {events.slice(0, 6).map((event) => (
                     <EventCard
                         key={event.id}
-                        imageUrl={event.imageUrl}
-                        title={event.title}
-                        description={event.description}
-                        detailLink={event.detailLink} // Ini akan menggunakan '#'
+                        // Mapping data dari controller ke props EventCard
+                        title={event.nama}
+                        description={event.deskripsi}
+                        // Pastikan path ke gambar benar, contoh: /storage/logos/namafile.jpg
+                        imageUrl={`/storage/logos/${event.logo}`}
+                        // Buat link detail menggunakan route helper dari Ziggy
+                        detailLink={route('events.show', event.id)}
                     />
                 ))}
             </div>
@@ -88,8 +53,8 @@ export default function EventsGridSection() {
             {/* Tombol Lihat Semua Acara */}
             <div className="mt-12 text-center">
                 <Link
-                    href="#" // Ganti route('all-events') dengan '#'
-                    className="inline-flex items-center rounded-md bg-gray-800 px-6 py-3 font-medium text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
+                    href=""
+                    className="inline-flex items-center rounded-md bg-blue-600 px-6 py-3 font-medium text-white transition duration-150 ease-in-out hover:bg-blue-500 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                 >
                     Lihat semua acara
                     <svg className="-mr-0.5 ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
