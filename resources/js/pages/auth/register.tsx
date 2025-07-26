@@ -1,119 +1,126 @@
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+// resources/js/pages/Auth/Login.tsx
 
-import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
+import { useForm } from '@inertiajs/react';
+import React, { FormEvent, useEffect, useState } from 'react';
 
-type RegisterForm = {
-    name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-};
-
-export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
-        name: '',
+export default function Login() {
+    const { data, setData, post, processing, errors, reset } = useForm({
+        nim: '',
         email: '',
-        password: '',
-        password_confirmation: '',
+        remember: false,
     });
 
-    const submit: FormEventHandler = (e) => {
+    // State untuk mengontrol apakah form sudah disubmit (dan diganti dengan pesan)
+    const [submissionInitiated, setSubmissionInitiated] = useState(false);
+
+    useEffect(() => {
+        return () => {
+            reset('email');
+            // Pastikan state kembali ke false saat komponen di-unmount atau direset
+            setSubmissionInitiated(false);
+        };
+    }, []);
+
+    const onHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setData(event.target.name as 'nim' | 'email', event.target.value);
+    };
+
+    const submit = (e: FormEvent) => {
         e.preventDefault();
-        post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
+        // Segera ubah tampilan setelah tombol diklik
+        setSubmissionInitiated(true);
+
+        // Lakukan post ke route login
+        post(route('login'), {
+            onSuccess: () => {
+                // Tidak perlu mengubah state backendSuccess di sini lagi
+                // karena tombol akan selalu muncul setelah submissionInitiated
+            },
+            onError: () => {
+                // Tampilan tetap pada pesan "menunggu verifikasi" bahkan jika ada error.
+                // Anda bisa menambahkan log error untuk debugging, tetapi tidak mengubah UI.
+                console.error('Verifikasi email gagal dikirim:', errors);
+            },
+            onFinish: () => {
+                // Logika yang dijalankan setelah permintaan selesai (baik sukses atau gagal)
+                // Tidak ada perubahan state UI di sini.
+            },
         });
     };
 
     return (
-        <AuthLayout title="Create an account" description="Enter your details below to create your account">
-            <Head title="Register" />
-            <form className="flex flex-col gap-6" onSubmit={submit}>
-                <div className="grid gap-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="name">Name</Label>
-                        <Input
-                            id="name"
-                            type="text"
-                            required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="name"
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            disabled={processing}
-                            placeholder="Full name"
-                        />
-                        <InputError message={errors.name} className="mt-2" />
+        <AuthLayout title="Buat Akun Mahasiswa" pageTitle="Register">
+            {/* Wrapper untuk menjaga ukuran form agar tidak berubah drastis */}
+            <div className="flex min-h-[280px] flex-col items-center justify-center pb-4">
+                {submissionInitiated ? (
+                    // Tampilkan pesan verifikasi setelah submit
+                    <div className="text-center">
+                        <h2 className="mb-4 text-xl font-semibold text-gray-800">Meminta verifikasi akun berhasil, menunggu verifikasi.</h2>
+                        {/* Tombol "Kembali ke Landing Page" akan selalu tampil jika submissionInitiated true */}
+                        <a
+                            href={route('landing')} // Pastikan 'landing' adalah nama route landing page Anda
+                            className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-lg font-semibold tracking-widest text-white uppercase ring-gray-300 transition duration-150 ease-in-out hover:bg-gray-700 focus:border-gray-900 focus:ring focus:outline-none active:bg-gray-900 disabled:opacity-25"
+                        >
+                            Kembali ke Landing Page
+                        </a>
                     </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            required
-                            tabIndex={2}
-                            autoComplete="email"
-                            value={data.email}
-                            onChange={(e) => setData('email', e.target.value)}
+                ) : (
+                    // Tampilkan form jika belum disubmit
+                    <form onSubmit={submit} className="w-full pb-7">
+                        {/* Input NIM */}
+                        <div className="mb-8">
+                            <label htmlFor="nim" className="mb-3 block text-[18px] font-bold text-gray-700">
+                                NIM
+                            </label>
+                            <input
+                                type="text"
+                                name="nim"
+                                id="nim"
+                                value={data.nim}
+                                className="focus:ring-opacity-50 border-gray-00 mt-1 block h-11 w-full rounded-md border-[1px] border-gray-300 pl-3 text-[18px] text-black shadow-md focus:border-indigo-300 focus:ring focus:ring-indigo-200"
+                                autoComplete="username"
+                                onChange={onHandleChange}
+                                required
+                                autoFocus
+                            />
+                            {errors.nim && <div className="mt-3 text-sm text-red-500">{errors.nim}</div>}
+                        </div>
+                        {/* Input Email */}
+                        <div className="mb-6">
+                            <label htmlFor="email" className="mb-3 block text-[18px] font-bold text-gray-700">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                value={data.email}
+                                className="focus:ring-opacity-50 focus:ring-ring-indigo-200 mt-1 block h-11 w-full rounded-md border-[1px] border-gray-300 pr-4 pl-3 text-[18px] text-black shadow-md focus:border-indigo-300 focus:ring"
+                                autoComplete="email"
+                                onChange={onHandleChange}
+                                required
+                            />
+                            {errors.email && <div className="mt-1 text-sm text-red-500">{errors.email}</div>}
+                        </div>
+                        {/* Tombol Minta Verifikasi Akun */}
+                        <button
+                            type="submit"
+                            className="w-full rounded-md border border-transparent bg-gray-800 px-4 py-2 text-lg font-medium text-white shadow-sm hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
                             disabled={processing}
-                            placeholder="email@example.com"
-                        />
-                        <InputError message={errors.email} />
-                    </div>
+                        >
+                            Minta Verifikasi Akun
+                        </button>
+                    </form>
+                )}
 
-                    <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            required
-                            tabIndex={3}
-                            autoComplete="new-password"
-                            value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            disabled={processing}
-                            placeholder="Password"
-                        />
-                        <InputError message={errors.password} />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">Confirm password</Label>
-                        <Input
-                            id="password_confirmation"
-                            type="password"
-                            required
-                            tabIndex={4}
-                            autoComplete="new-password"
-                            value={data.password_confirmation}
-                            onChange={(e) => setData('password_confirmation', e.target.value)}
-                            disabled={processing}
-                            placeholder="Confirm password"
-                        />
-                        <InputError message={errors.password_confirmation} />
-                    </div>
-
-                    <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Create account
-                    </Button>
-                </div>
-
-                <div className="text-center text-sm text-muted-foreground">
-                    Already have an account?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
-                        Log in
-                    </TextLink>
-                </div>
-            </form>
+                {/* Link "Sudah punya akun?" hanya tampil jika form masih terlihat */}
+                {!submissionInitiated && (
+                    <a href={route('register')} className="mt-4 text-gray-500 hover:text-gray-700">
+                        Sudah punya akun?
+                    </a>
+                )}
+            </div>
         </AuthLayout>
     );
 }
