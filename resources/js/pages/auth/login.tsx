@@ -45,7 +45,7 @@ export default function Login() {
                             name="nim"
                             id="nim"
                             value={data.nim}
-                            className="focus:ring-opacity-50 mt-1 block h-11 w-full rounded-md border-gray-300 pl-3 text-[18px] text-black shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200"
+                            className="focus:ring-opacity-50 border-gray-00 mt-1 block h-11 w-full rounded-md border-[1px] border-gray-300 pl-3 text-[18px] text-black shadow-md focus:border-indigo-300 focus:ring focus:ring-indigo-200"
                             autoComplete="username"
                             onChange={onHandleChange}
                             required
@@ -64,7 +64,7 @@ export default function Login() {
                             name="password"
                             id="password"
                             value={data.password}
-                            className="focus:ring-opacity-50 mt-1 block h-11 w-full rounded-md border-gray-300 pl-3 text-[18px] text-black shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200"
+                            className="focus:ring-opacity-50 mt-1 block h-11 w-full rounded-md border-[1px] border-gray-300 pr-4 pl-3 text-[18px] text-black shadow-md focus:border-indigo-300 focus:ring focus:ring-indigo-200"
                             autoComplete="current-password"
                             onChange={onHandleChange}
                             required
