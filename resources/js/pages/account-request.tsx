@@ -4,7 +4,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -24,8 +23,6 @@ interface RequestAkses {
 export default function AccountRequest({ account }: { account: RequestAkses[] }) {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [selectedRequest, setSelectedRequest] = useState<RequestAkses | null>(null);
-    const [isApproving, setIsApproving] = useState(false);
-    const [approvingId, setApprovingId] = useState<string | null>(null);
 
     const handleApproveClick = (request: RequestAkses) => {
         setSelectedRequest(request);
@@ -35,24 +32,17 @@ export default function AccountRequest({ account }: { account: RequestAkses[] })
     const handleConfirmApprove = () => {
         if (!selectedRequest) return;
 
-        setIsApproving(true);
-        setApprovingId(selectedRequest.id);
-
         router.post(
             `/account-request/${selectedRequest.id}`,
             {},
             {
                 onSuccess: () => {
                     setIsConfirmOpen(false);
-                    setIsApproving(false);
-                    setApprovingId(null);
                     // You can add a toast notification here if needed
                     console.log('Account approved successfully');
                 },
                 onError: (errors) => {
                     console.error(errors);
-                    setIsApproving(false);
-                    setApprovingId(null);
                 },
             },
         );
@@ -83,19 +73,8 @@ export default function AccountRequest({ account }: { account: RequestAkses[] })
                                             <TableCell>{request.email}</TableCell>
                                             <TableCell>{new Date(request.created_at).toLocaleDateString()}</TableCell>
                                             <TableCell className="text-right">
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() => handleApproveClick(request)}
-                                                    disabled={isApproving && approvingId === request.id}
-                                                >
-                                                    {isApproving && approvingId === request.id ? (
-                                                        <>
-                                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                            Approving...
-                                                        </>
-                                                    ) : (
-                                                        'Approve'
-                                                    )}
+                                                <Button size="sm" onClick={() => handleApproveClick(request)}>
+                                                    Approve
                                                 </Button>
                                             </TableCell>
                                         </TableRow>
@@ -123,18 +102,11 @@ export default function AccountRequest({ account }: { account: RequestAkses[] })
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsConfirmOpen(false)} disabled={isApproving}>
+                        <Button variant="outline" onClick={() => setIsConfirmOpen(false)}>
                             Cancel
                         </Button>
-                        <Button onClick={handleConfirmApprove} className="bg-green-600 hover:bg-green-700" disabled={isApproving}>
-                            {isApproving ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Approving...
-                                </>
-                            ) : (
-                                'Confirm Approval'
-                            )}
+                        <Button onClick={handleConfirmApprove} className="bg-green-600 hover:bg-green-700">
+                            Confirm Approval
                         </Button>
                     </DialogFooter>
                 </DialogContent>

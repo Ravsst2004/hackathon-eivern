@@ -53,7 +53,7 @@ const initialEvents: EventType[] = [
 ];
 
 export default function Event({ events, ormawa }: any) {
-    console.log(ormawa);
+    console.log(events);
 
     const [eventList, setEventList] = useState<EventType[]>(initialEvents);
     const [searchTerm, setSearchTerm] = useState('');
@@ -80,7 +80,7 @@ export default function Event({ events, ormawa }: any) {
 
     const confirmDelete = () => {
         if (deletingEvent) {
-            router.delete(route('events.destroy', editingEvent.id), {
+            router.delete(route('events.destroy', deletingEvent.id), {
                 onError: () => {
                     console.log('error');
                 },
