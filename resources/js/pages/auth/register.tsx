@@ -52,15 +52,15 @@ export default function Login() {
     return (
         <AuthLayout title="Buat Akun Mahasiswa" pageTitle="Register">
             {/* Wrapper untuk menjaga ukuran form agar tidak berubah drastis */}
-            <div className="flex min-h-[280px] flex-col items-center justify-center pb-4">
+            <div className="min-h-[280px] pb-4">
                 {submissionInitiated ? (
                     // Tampilkan pesan verifikasi setelah submit
                     <div className="text-center">
-                        <h2 className="mb-4 text-xl font-semibold text-gray-800">Meminta verifikasi akun berhasil, menunggu verifikasi.</h2>
+                        <h2 className="f mb-4 text-xl text-gray-800">Meminta verifikasi akun berhasil, menunggu verifikasi.</h2>
                         {/* Tombol "Kembali ke Landing Page" akan selalu tampil jika submissionInitiated true */}
                         <a
-                            href={route('landing')} // Pastikan 'landing' adalah nama route landing page Anda
-                            className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-lg font-semibold tracking-widest text-white uppercase ring-gray-300 transition duration-150 ease-in-out hover:bg-gray-700 focus:border-gray-900 focus:ring focus:outline-none active:bg-gray-900 disabled:opacity-25"
+                            href={route('landing-page')} // Pastikan 'landing' adalah nama route landing page Anda
+                            className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-lg font-bold tracking-widest text-white ring-gray-300 transition duration-150 ease-in-out hover:bg-gray-700 focus:border-gray-900 focus:ring focus:outline-none active:bg-gray-900 disabled:opacity-25"
                         >
                             Kembali ke Landing Page
                         </a>
@@ -116,7 +116,7 @@ export default function Login() {
 
                 {/* Link "Sudah punya akun?" hanya tampil jika form masih terlihat */}
                 {!submissionInitiated && (
-                    <a href={route('register')} className="mt-4 text-gray-500 hover:text-gray-700">
+                    <a href={route('login')} className="mt-4 text-gray-500 hover:text-gray-700">
                         Sudah punya akun?
                     </a>
                 )}

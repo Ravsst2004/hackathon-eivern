@@ -1,7 +1,6 @@
 <?php
 
 use Inertia\Inertia;
-use App\Models\Event;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrmawaController;
 use App\Http\Controllers\LandingController;
