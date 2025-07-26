@@ -15,7 +15,7 @@ use App\Http\Controllers\Sertifikat\SertifikatController;
 // })->name('landing');
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
-Route::get('/event/{id}', [EventDetailController::class, 'show'])->name('events.show');
+Route::get('/event/{event}', [EventDetailController::class, 'show'])->name('events.show');
 
 
 Route::get('/all-events', function () {
