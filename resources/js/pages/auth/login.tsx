@@ -1,41 +1,48 @@
-// resources/js/pages/Auth/Login.tsx
+// Lokasi file: resources/js/pages/Auth/Login.tsx
 
-import AuthLayout from '@/layouts/auth-layout'; // Pastikan path ke AuthLayout benar
-import { useForm } from '@inertiajs/react'; // Head tidak perlu diimpor lagi di sini, karena sudah di AuthLayout
+import AuthLayout from '@/layouts/auth-layout'; // Pastikan path ke AuthLayout Anda sudah benar
+import { useForm } from '@inertiajs/react';
 import React, { FormEvent, useEffect } from 'react';
 
 export default function Login() {
+    // Hook `useForm` dari Inertia untuk mengelola state form,
+    // status `processing` (loading), dan objek `errors` dari backend.
     const { data, setData, post, processing, errors, reset } = useForm({
         nim: '',
         password: '',
-        remember: false,
+        remember: false, // Opsi "remember me"
     });
 
+    // `useEffect` ini akan berjalan ketika komponen dilepas dari DOM (misal, pindah halaman).
+    // Tujuannya adalah untuk membersihkan field password agar tidak tersimpan.
     useEffect(() => {
         return () => {
             reset('password');
         };
     }, []);
 
+    // Fungsi ini akan dipanggil setiap kali ada perubahan pada input NIM atau password.
     const onHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setData(event.target.name as 'nim' | 'password', event.target.value);
+        const target = event.target;
+        // Memperbarui state `data` sesuai dengan nama dan nilai input yang berubah.
+        setData(target.name as 'nim' | 'password', target.value);
     };
 
+    // Fungsi yang akan dieksekusi saat form di-submit.
     const submit = (e: FormEvent) => {
-        e.preventDefault();
+        e.preventDefault(); // Mencegah reload halaman standar dari form submission
+        // Mengirim data form ke route 'login' di backend menggunakan metode POST.
+        // Inertia akan menangani request-response secara otomatis.
         post(route('login'));
     };
 
     return (
-        // Gunakan AuthLayout sebagai wrapper untuk halaman login
-        // Anda bisa meneruskan title ke AuthLayout untuk judul di browser tab
-        // dan pageTitle untuk judul di dalam kotak form
+        // Menggunakan AuthLayout sebagai pembungkus utama halaman.
+        // `title` untuk judul tab browser, `pageTitle` untuk judul di dalam kartu form.
         <AuthLayout title="Login Mahasiswa" pageTitle="Login">
-            {' '}
-            {/* Contoh: "Login Mahasiswa" di tab, "Login" di form */}
             <div className="items-center justify-center pb-4">
                 <form onSubmit={submit} className="pb-7">
-                    {/* Input NIM */}
+                    {/* Input untuk NIM */}
                     <div className="mb-8">
                         <label htmlFor="nim" className="mb-3 block text-[18px] font-bold text-gray-700">
                             NIM
@@ -51,10 +58,11 @@ export default function Login() {
                             required
                             autoFocus
                         />
+                        {/* Menampilkan pesan error untuk 'nim' jika ada */}
                         {errors.nim && <div className="mt-3 text-sm text-red-500">{errors.nim}</div>}
                     </div>
 
-                    {/* Input Password */}
+                    {/* Input untuk Password */}
                     <div className="mb-6">
                         <label htmlFor="password" className="mb-3 block text-[18px] font-bold text-gray-700">
                             Password
@@ -69,6 +77,7 @@ export default function Login() {
                             onChange={onHandleChange}
                             required
                         />
+                        {/* Menampilkan pesan error untuk 'password' jika ada */}
                         {errors.password && <div className="mt-1 text-sm text-red-500">{errors.password}</div>}
                     </div>
 
@@ -76,12 +85,13 @@ export default function Login() {
                     <button
                         type="submit"
                         className="w-full rounded-md border border-transparent bg-gray-800 px-4 py-2 text-lg font-medium text-white shadow-sm hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
-                        disabled={processing}
+                        disabled={processing} // Tombol dinonaktifkan saat request sedang diproses
                     >
-                        Sign In
+                        {processing ? 'Memproses...' : 'Sign In'}
                     </button>
                 </form>
 
+                {/* Link ke halaman registrasi */}
                 <a href={route('register')} className="text-gray-500 hover:text-gray-700">
                     Belum punya akun? Daftar sekarang
                 </a>

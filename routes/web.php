@@ -7,7 +7,7 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('LandingPage/index'); // Atau cukup 'LandingPage' jika itu berfungsi
-})->name('landing');
+})->name('landing-page');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
