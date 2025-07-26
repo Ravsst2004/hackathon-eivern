@@ -8,6 +8,7 @@ use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\EventDetailController;
 use App\Http\Controllers\Auth\RequestAccountUserController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\InfoController;
 use App\Http\Controllers\Sertifikat\SertifikatController;
 
 // Route::get('/', function () {
@@ -26,6 +27,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+    Route::get('profile', [InfoController::class, 'index'])->name('profile.edit');
+
+
+
     Route::resource('ormawa', OrmawaController::class);
 
 
@@ -39,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/utilities/{id}/edit', [UtilityController::class, 'edit'])->name('utilities.edit');
         Route::put('/utilities/{id}', [UtilityController::class, 'update'])->name('utilities.update');
         Route::resource('events', EventController::class);
+        Route::get('/request-uniq-id', [SertifikatController::class, 'requestUniqIdIndex'])->name('sertifikat.request');
     });
 
     Route::middleware(['isOrmawa'])->group(function () {
