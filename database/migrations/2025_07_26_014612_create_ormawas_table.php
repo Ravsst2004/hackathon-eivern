@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('logo', 255);
             $table->text('deskripsi');
             $table->char('user_id', 16);
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('user_id')->references('nim')->on('users')->onDelete('cascade');

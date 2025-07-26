@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('deskripsi', 255);
             $table->string('photo', 255);
             $table->unsignedBigInteger('id_events');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('id_events')->references('id')->on('events')->onDelete('cascade');

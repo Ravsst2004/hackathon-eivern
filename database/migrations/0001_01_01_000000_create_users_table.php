@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password', 255);
             $table->unsignedBigInteger('id_jurusan');
             $table->unsignedBigInteger('id_role');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('id_jurusan')->references('id')->on('jurusan')->onDelete('cascade');

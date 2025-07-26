@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->date('tanggal');
             $table->unsignedBigInteger('ormawa_id');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('ormawa_id')->references('id')->on('ormawa')->onDelete('cascade');
