@@ -1,4 +1,4 @@
-import { Student } from '@/pages/student-accounts';
+import { Student } from '@/types/model';
 import { Edit, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';

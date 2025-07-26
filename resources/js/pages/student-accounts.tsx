@@ -1,5 +1,3 @@
-'use client';
-
 import { Plus, Search } from 'lucide-react';
 import { useState } from 'react';
 
@@ -20,18 +18,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
+import { Student } from '@/types/model';
 import { Head } from '@inertiajs/react';
-
-export interface Student {
-    id: string;
-    nim: string;
-    nama: string;
-    email: string;
-    jurusan: string;
-    angkatan: string;
-    status: string;
-    alamat: string;
-}
 
 // Mock data
 const initialStudents: Student[] = [
@@ -87,6 +75,13 @@ const initialStudents: Student[] = [
     },
 ];
 
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Student Accounts',
+        href: '/student-accounts',
+    },
+];
+
 export default function StudentAccounts() {
     const [students, setStudents] = useState<Student[]>(initialStudents);
     const [searchTerm, setSearchTerm] = useState('');
@@ -137,13 +132,6 @@ export default function StudentAccounts() {
             setStudents(students.map((s) => (s.id === editingStudent.id ? { ...studentData, id: editingStudent.id } : s)));
         }
     };
-
-    const breadcrumbs: BreadcrumbItem[] = [
-        {
-            title: 'Student Accounts',
-            href: '/student-accounts',
-        },
-    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
