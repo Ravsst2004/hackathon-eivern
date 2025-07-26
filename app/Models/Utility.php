@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Utility extends Model
 {
-    protected $table = 'utitly';
+    protected $table = 'utilities';
     protected $fillable = ['max_skkm', 'logo'];
 }

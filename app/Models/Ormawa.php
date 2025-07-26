@@ -9,7 +9,7 @@ class Ormawa extends Model
 {
     use SoftDeletes;
     
-    protected $table = 'ormawa';
+    protected $table = 'ormawas';
     protected $fillable = ['nama', 'logo', 'deskripsi', 'user_id'];
 
     public function user()
