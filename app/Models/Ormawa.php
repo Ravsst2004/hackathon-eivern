@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ormawa extends Model
 {
+    use SoftDeletes;
+    
     protected $table = 'ormawa';
     protected $fillable = ['nama', 'logo', 'deskripsi', 'user_id'];
 

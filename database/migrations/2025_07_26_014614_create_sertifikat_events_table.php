@@ -24,6 +24,7 @@ return new class extends Migration
             $table->char('id_uniq_sertif', 255)->nullable();
             $table->char('id_user', 16)->nullable();
             $table->unsignedBigInteger('id_event');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('id_user')->references('nim')->on('users')->onDelete('set null');
