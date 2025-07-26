@@ -1,14 +1,20 @@
 <?php
 
-use App\Http\Controllers\Auth\RequestAccountUserController;
-use App\Http\Controllers\OrmawaController;
-use App\Http\Controllers\Sertifikat\SertifikatController;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrmawaController;
+use App\Http\Controllers\LandingController;
+use App\Http\Controllers\EventDetailController;
+use App\Http\Controllers\Auth\RequestAccountUserController;
+use App\Http\Controllers\Sertifikat\SertifikatController;
 
-Route::get('/', function () {
-    return Inertia::render('LandingPage/index'); // Atau cukup 'LandingPage' jika itu berfungsi
-})->name('landing');
+// Route::get('/', function () {
+//     return Inertia::render('LandingPage/index'); // Atau cukup 'LandingPage' jika itu berfungsi
+// })->name('landing');
+
+Route::get('/', [LandingController::class, 'index'])->name('landing');
+
+Route::get('/event/{id}', [EventDetailController::class, 'show']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
