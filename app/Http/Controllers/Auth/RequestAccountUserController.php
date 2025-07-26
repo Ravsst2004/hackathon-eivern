@@ -11,12 +11,13 @@ use App\Models\User;
 use App\Notifications\AccountForUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Inertia\Inertia;
 
 class RequestAccountUserController extends Controller
 {
     public function index()
     {
-        // ni ke inertia
+        return Inertia::render('auth/register');
     }
 
     public function store(Request $request)
