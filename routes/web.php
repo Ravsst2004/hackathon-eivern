@@ -25,6 +25,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+    Route::get('profile', function () {
+        return Inertia::render('profile');
+    });
     Route::resource('ormawa', OrmawaController::class);
 
 
@@ -35,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('ormawa.generate-uniq-id');
         Route::post('/account-request/{id}', [RequestAccountUserController::class, 'approveAccount'])->name('account-request.approve');
         Route::resource('events', EventController::class);
+        Route::get('/request-uniq-id', [SertifikatController::class, 'requestUniqIdIndex'])->name('sertifikat.request');
     });
 
     Route::middleware(['isOrmawa'])->group(function () {
