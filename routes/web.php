@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RequestAccountUserController;
+use App\Http\Controllers\OrmawaController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -13,6 +14,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 });
+
+Route::resource('ormawa', OrmawaController::class);
 
 
 Route::get('/account-request', [RequestAccountUserController::class, 'approveAccountPage'])->name('account-request');
