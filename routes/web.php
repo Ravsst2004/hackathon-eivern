@@ -6,6 +6,7 @@ use App\Http\Controllers\OrmawaController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\EventDetailController;
 use App\Http\Controllers\Auth\RequestAccountUserController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\Sertifikat\SertifikatController;
 
 // Route::get('/', function () {
@@ -16,9 +17,7 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/event/{event}', [EventDetailController::class, 'show'])->name('events.show');
 
 
-Route::get('/all-events', function () {
-    return Inertia::render('Events/AllEvents'); // Atau cukup 'LandingPage' jika itu berfungsi
-})->name('all-events');
+Route::get('/all-events', [EventController::class, 'all_event'])->name('all-events');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {

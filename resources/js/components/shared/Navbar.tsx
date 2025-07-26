@@ -6,9 +6,12 @@ export default function Navbar() {
     const { auth } = usePage().props;
 
     return (
-        <header className="flex items-center justify-between bg-white p-4 shadow-md">
+        <header className="flex items-center justify-between bg-white p-4 pl-10 shadow-md">
             <div className="flex items-center">
-                <img src="/images/document-icon.svg" alt="SISKA Icon" className="mr-3 h-8 w-8" />
+                <Link href={route('landing')}>
+                    <img src="/images/logo-siska.png" alt="SISKA Icon" className="mr-3 h-8 w-8" />
+                </Link>
+
                 <div>
                     <h1 className="text-xl font-semibold text-gray-800">SISKA</h1>
                     <p className="text-sm text-gray-600">Sistem Informasi SKKM Akademik</p>

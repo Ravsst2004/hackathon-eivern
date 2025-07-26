@@ -51,7 +51,7 @@ export default function EventIndex({ events }: PageProps) {
                 </div>
 
                 {/* 4. Grid Acara sekarang menggunakan data asli */}
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {events.data.map((event) => (
                         <EventCard
                             key={event.id}
