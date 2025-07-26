@@ -29,7 +29,7 @@ export default function EventCard({ imageUrl, title, description, detailLink }: 
                 <p className="mb-4 line-clamp-3 text-sm text-gray-600">{description}</p> {/* line-clamp untuk membatasi baris */}
                 <Link
                     href={detailLink}
-                    className="inline-block rounded-md bg-gray-800 px-4 py-2 text-sm font-medium text-white transition duration-150 ease-in-out hover:bg-gray-700"
+                    className="inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition duration-150 ease-in-out hover:bg-blue-400"
                 >
                     Detail
                 </Link>

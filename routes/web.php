@@ -9,6 +9,10 @@ Route::get('/', function () {
     return Inertia::render('LandingPage/index'); // Atau cukup 'LandingPage' jika itu berfungsi
 })->name('landing-page');
 
+Route::get('/all-events', function () {
+    return Inertia::render('Events/AllEvents'); // Atau cukup 'LandingPage' jika itu berfungsi
+})->name('all-events');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');

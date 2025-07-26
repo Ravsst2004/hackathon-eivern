@@ -88,8 +88,8 @@ export default function EventsGridSection() {
             {/* Tombol Lihat Semua Acara */}
             <div className="mt-12 text-center">
                 <Link
-                    href="#" // Ganti route('all-events') dengan '#'
-                    className="inline-flex items-center rounded-md bg-gray-800 px-6 py-3 font-medium text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
+                    href={route('all-events')} // Ganti route('all-events') dengan '#'
+                    className="inline-flex items-center rounded-md bg-blue-600 px-6 py-3 font-medium text-white transition duration-150 ease-in-out hover:bg-blue-400 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                 >
                     Lihat semua acara
                     <svg className="-mr-0.5 ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
