@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Status;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,8 +19,16 @@ return new class extends Migration
             $table->string('tingkat', 255);
             $table->string('partisipasi', 255);
             $table->integer('skkm');
-            $table->boolean('paraf_bem')->default(false);
-            $table->boolean('paraf_kemahasiswaan')->default(false);
+            $table->enum('paraf_bem', [
+                Status::APPROVE->value,
+                Status::UPLOAD->value,
+                Status::REQUEST->value
+            ])->default(Status::UPLOAD->value);
+            $table->enum('paraf_kemahasiswaan', [
+                Status::APPROVE->value,
+                Status::UPLOAD->value,
+                Status::REQUEST->value
+            ])->default(Status::UPLOAD->value);
             $table->string('photo_sertifikat', 255)->nullable();
             $table->char('id_uniq_sertif', 255)->nullable();
             $table->char('id_user', 16)->nullable();
