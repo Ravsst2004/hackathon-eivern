@@ -42,6 +42,7 @@ Route::middleware(['auth', 'verified', 'isBem', 'isOrmawa', 'isKemahasiswaan', '
 });
 
 
+Route::put('/upload-sertifikat', [SertifikatController::class, 'uploadSertifikat'])->name('sertifikat.upload'); 
 
 Route::patch('/paraf-request', [RequestAccountUserController::class, 'requestParafBem'])->name('paraf.request')->middleware('isMahasiswa');
 Route::get('/account-request', [RequestAccountUserController::class, 'approveAccountPage'])->name('account-request');
