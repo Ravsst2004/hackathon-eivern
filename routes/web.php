@@ -14,32 +14,35 @@ use App\Http\Controllers\Sertifikat\SertifikatController;
 // })->name('landing');
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
-
 Route::get('/event/{id}', [EventDetailController::class, 'show']);
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'isBem', 'isOrmawa', 'isKemahasiswaan', 'isSuperAdmin'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+    Route::resource('ormawa', OrmawaController::class);
+
+    Route::middleware(['isBem', 'isKemahasiswaan', 'isSuperAdmin'])->group(function () {
+        Route::get('/request-paraf', [SertifikatController::class, 'indexParaf'])->name('sertifikat.index');
+        Route::patch('/approve-paraf', [SertifikatController::class, 'approveParaf'])->name('sertifikat.approve');
+        Route::put('/generate-uniq-id', [SertifikatController::class, 'uniqIdGenerate'])
+                ->name('ormawa.generate-uniq-id');
+        Route::post('/account-request/{id}', [RequestAccountUserController::class, 'approveAccount'])->name('account-request.approve');
+        // util
+        Route::get('/utilities/{id}/edit', [UtilityController::class, 'edit'])->name('utilities.edit');
+        Route::put('/utilities/{id}', [UtilityController::class, 'update'])->name('utilities.update');
+    });
+
+    Route::middleware(['isOrmawa'])->group(function () {
+        Route::post('/import-excel', [SertifikatController::class, 'importExcel'])->name('ormawa.import-excel');
+        Route::get('/export-sertifikat/{eventId}', [SertifikatController::class, 'exportToexcel'])->name('sertifikat.export');
+    });
 });
 
-Route::resource('ormawa', OrmawaController::class);
 
-Route::get('/utilities/{id}/edit', [UtilityController::class, 'edit'])->name('utilities.edit');
-Route::put('/utilities/{id}', [UtilityController::class, 'update'])->name('utilities.update');
-
-Route::get('/request-paraf', [SertifikatController::class, 'indexParaf'])->name('sertifikat.index');
-Route::patch('/approve-paraf', [SertifikatController::class, 'approveParaf'])->name('sertifikat.approve');
-
-Route::post('/import-excel', [SertifikatController::class, 'importExcel'])->name('ormawa.import-excel');
-Route::put('/generate-uniq-id', [SertifikatController::class, 'uniqIdGenerate'])->name('ormawa.generate-uniq-id');
-Route::get('/export-sertifikat/{eventId}', [SertifikatController::class, 'exportToexcel'])->name('sertifikat.export');
-
-
-Route::patch('/paraf-request', [RequestAccountUserController::class, 'requestParafBem'])->name('paraf.request');
-
+Route::patch('/paraf-request', [RequestAccountUserController::class, 'requestParafBem'])->name('paraf.request')->middleware('isMahasiswa');
 Route::get('/account-request', [RequestAccountUserController::class, 'approveAccountPage'])->name('account-request');
-Route::post('/account-request/{id}', [RequestAccountUserController::class, 'approveAccount'])->name('account-request.approve');
+
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
