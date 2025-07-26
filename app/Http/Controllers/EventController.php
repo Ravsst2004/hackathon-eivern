@@ -18,11 +18,16 @@ class EventController extends Controller
     {
         $user = Auth::user();
 
-        $events = match ($user->role_enum) {
-            Roles::ORMAWA => Event::where('ormawa_id', $user->ormawa->id)->get(),
-            default => Event::all()
-        };
-        $ormawa = Ormawa::get();
+        $query = Event::query();
+
+        if ($user->role->nama === Roles::ORMAWA->value) {
+            $query->where('ormawa_id', $user->ormawa->id);
+        }
+
+        $events = $query->with('sertifikatEvents')->get();
+        $ormawa = Ormawa::all();
+
+        // return $events;
 
         return Inertia::render('event', [
             'events' => $events,
