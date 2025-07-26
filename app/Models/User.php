@@ -17,10 +17,13 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
+     protected $fillable = [
+        'nim', 
         'name',
-        'email',
-        'password',
+        'email', 
+        'password', 
+        'id_jurusan', 
+        'id_role'
     ];
 
     /**
@@ -44,5 +47,26 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // relations
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class, 'id_jurusan');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'id_role');
+    }
+
+    public function ormawa()
+    {
+        return $this->hasOne(Ormawa::class, 'user_id', 'nim');
+    }
+
+    public function sertifikatEvents()
+    {
+        return $this->hasMany(SertifikatEvent::class, 'id_user', 'nim');
     }
 }
