@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class OrmawaController extends Controller
 {
@@ -106,9 +107,16 @@ class OrmawaController extends Controller
 
         // Handle logo update jika ada file baru
         if ($request->hasFile('logo')) {
+            // Hapus logo lama jika ada
+            if ($ormawa->logo && Storage::disk('public')->exists($ormawa->logo)) {
+                Storage::disk('public')->delete($ormawa->logo);
+            }
+
+            // Simpan logo baru
             $path = $request->file('logo')->store('ormawa', 'public');
             $ormawa->logo = $path;
         }
+
 
         // Update data ormawa
         $ormawa->nama = $request->name;

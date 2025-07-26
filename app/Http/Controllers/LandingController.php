@@ -21,6 +21,4 @@ class LandingController extends Controller
             'events' => $events,
         ]);
     }
-
-    
 }
