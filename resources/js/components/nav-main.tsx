@@ -50,7 +50,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                         </SidebarMenuSubItem>
                                         <SidebarMenuSubItem>
                                             <SidebarMenuButton asChild>
-                                                <Link href="/request-accounts">Request Accounts</Link>
+                                                <Link href="/account-request">Request Accounts</Link>
                                             </SidebarMenuButton>
                                         </SidebarMenuSubItem>
                                     </SidebarMenuSub>
