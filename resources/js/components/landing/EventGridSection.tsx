@@ -45,7 +45,7 @@ export default function EventsGridSection({ events }: EventsGridProps) {
                         // Pastikan path ke gambar benar, contoh: /storage/logos/namafile.jpg
                         imageUrl={`/storage/logos/${event.logo}`}
                         // Buat link detail menggunakan route helper dari Ziggy
-                        detailLink={route('events.show', event.id)}
+                        detailLink={route('event.detail', event.id)}
                     />
                 ))}
             </div>
@@ -53,7 +53,7 @@ export default function EventsGridSection({ events }: EventsGridProps) {
             {/* Tombol Lihat Semua Acara */}
             <div className="mt-12 text-center">
                 <Link
-                    href=""
+                    href={route('all-events')}
                     className="inline-flex items-center rounded-md bg-blue-600 px-6 py-3 font-medium text-white transition duration-150 ease-in-out hover:bg-blue-500 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                 >
                     Lihat semua acara

@@ -15,14 +15,14 @@ use App\Http\Controllers\Sertifikat\SertifikatController;
 // })->name('landing');
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
-Route::get('/event/{id}', [EventDetailController::class, 'detail'])->name('events.show');
+Route::get('/event/{event}', [EventDetailController::class, 'show'])->name('event.detail');
 
 
 Route::get('/all-events', function () {
     return Inertia::render('Events/AllEvents'); // Atau cukup 'LandingPage' jika itu berfungsi
 })->name('all-events');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
@@ -49,8 +49,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 
+Route::put('/upload-sertifikat', [SertifikatController::class, 'uploadSertifikat'])->name('sertifikat.upload');
 
-Route::patch('/paraf-request', [RequestAccountUserController::class, 'requestParafBem'])->name('paraf.request')->middleware('isMahasiswa');
+Route::patch('/paraf-request', [SertifikatController::class, 'requestParaf'])->name('paraf.request');
 Route::get('/account-request', [RequestAccountUserController::class, 'approveAccountPage'])->name('account-request');
 
 

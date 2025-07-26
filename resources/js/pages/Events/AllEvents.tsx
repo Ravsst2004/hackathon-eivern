@@ -1,72 +1,30 @@
 import EventCard from '@/components/landing/EventCard';
+import Pagination from '@/components/shared/Pagination'; // 1. Impor komponen Pagination
 import GuestLayout from '@/layouts/guest-layout';
 import { Head } from '@inertiajs/react';
-import { useMemo, useState } from 'react';
 
-// Definisikan tipe data untuk Event
+// 2. Definisikan tipe data agar sesuai dengan data dari Controller
 interface Event {
     id: number;
-    title: string;
-    description: string;
-    image_url: string;
+    nama: string;
+    deskripsi: string;
+    logo: string;
+    // tambahkan properti lain jika perlu
 }
 
-// --- DATA DUMMY ---
-// Kita buat 25 data dummy untuk mensimulasikan 3 halaman (12 + 12 + 1)
-const dummyEvents: Event[] = Array.from({ length: 25 }, (_, i) => ({
-    id: i + 1,
-    title: `Workshop Keren #${i + 1}: Topik Menarik`,
-    description: `Ini adalah deskripsi singkat untuk workshop #${i + 1}. Pelajari hal-hal baru dan tingkatkan skill Anda bersama kami.`,
-    image_url: '', // Kosongkan agar menampilkan placeholder
-}));
-// --- END OF DATA DUMMY ---
+// Tipe untuk objek paginator dari Laravel
+interface Paginator<T> {
+    data: T[];
+    links: { url: string | null; label: string; active: boolean }[];
+    // Anda bisa menambahkan properti paginator lain jika perlu
+}
 
-export default function EventIndex() {
-    // State untuk melacak halaman yang sedang aktif
-    const [currentPage, setCurrentPage] = useState(1);
-    // Menetapkan jumlah item per halaman menjadi 12
-    const itemsPerPage = 12;
+interface PageProps {
+    events: Paginator<Event>;
+}
 
-    // Gunakan useMemo untuk menghitung data yang akan ditampilkan dan link paginasi
-    // Ini akan dihitung ulang hanya jika `currentPage` berubah, sehingga lebih efisien.
-    const paginatedData = useMemo(() => {
-        const totalPages = Math.ceil(dummyEvents.length / itemsPerPage);
-
-        // Hitung index awal dan akhir untuk memotong array data
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const currentData = dummyEvents.slice(startIndex, endIndex);
-
-        // Buat struktur link paginasi secara dinamis
-        const links = [];
-        links.push({ url: currentPage > 1 ? '#' : null, label: '&laquo; Previous', active: false });
-
-        for (let i = 1; i <= totalPages; i++) {
-            links.push({ url: '#', label: i.toString(), active: i === currentPage });
-        }
-
-        links.push({ url: currentPage < totalPages ? '#' : null, label: 'Next &raquo;', active: false });
-
-        return {
-            data: currentData,
-            links: links,
-        };
-    }, [currentPage]);
-
-    // Fungsi untuk menangani klik pada tombol pagination
-    const handlePageChange = (label: string) => {
-        if (label.includes('Previous')) {
-            setCurrentPage((prev) => Math.max(prev - 1, 1));
-        } else if (label.includes('Next')) {
-            const totalPages = Math.ceil(dummyEvents.length / itemsPerPage);
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-        } else {
-            const pageNumber = parseInt(label, 10);
-            if (!isNaN(pageNumber)) {
-                setCurrentPage(pageNumber);
-            }
-        }
-    };
+export default function EventIndex({ events }: PageProps) {
+    // 3. Hapus semua data dummy dan state management (useState, useMemo, handlePageChange)
 
     return (
         <GuestLayout>
@@ -92,48 +50,21 @@ export default function EventIndex() {
                     </div>
                 </div>
 
-                {/* Grid Acara */}
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    {paginatedData.data.map((event) => (
-                        <EventCard key={event.id} imageUrl={event.image_url} title={event.title} description={event.description} detailLink={'#'} />
+                {/* 4. Grid Acara sekarang menggunakan data asli */}
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {events.data.map((event) => (
+                        <EventCard
+                            key={event.id}
+                            title={event.nama} // Gunakan 'nama'
+                            description={event.deskripsi} // Gunakan 'deskripsi'
+                            imageUrl={`/storage/logos/${event.logo}`} // Sesuaikan path gambar
+                            detailLink={route('events.show', event.id)} // Gunakan link dinamis
+                        />
                     ))}
                 </div>
 
-                {/* --- PAGINATION LOGIC & JSX --- */}
-                <nav className="mt-12 flex items-center justify-center">
-                    <div className="flex flex-wrap">
-                        {paginatedData.links.map((link, index) => {
-                            // Render tombol yang tidak bisa diklik (untuk Previous di hal 1, atau Next di hal terakhir)
-                            if (link.url === null) {
-                                return (
-                                    <span
-                                        key={`disabled-${index}`}
-                                        dangerouslySetInnerHTML={{ __html: link.label }}
-                                        className="mx-1 flex h-9 min-w-[36px] cursor-not-allowed items-center justify-center rounded-md border border-gray-200 bg-gray-100 px-3 py-1 text-sm text-gray-400"
-                                    />
-                                );
-                            }
-                            // Render tombol yang bisa diklik
-                            return (
-                                <a
-                                    key={link.label}
-                                    href="#"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handlePageChange(link.label);
-                                    }}
-                                    dangerouslySetInnerHTML={{ __html: link.label }}
-                                    className={`mx-1 flex h-9 min-w-[36px] items-center justify-center rounded-md border px-3 py-1 text-sm transition ${
-                                        link.active
-                                            ? 'border-blue-500 bg-blue-500 text-white'
-                                            : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-100'
-                                    }`}
-                                />
-                            );
-                        })}
-                    </div>
-                </nav>
-                {/* --- END OF PAGINATION --- */}
+                {/* 5. Tampilkan komponen Pagination dengan data 'links' dari controller */}
+                <Pagination links={events.links} />
             </div>
         </GuestLayout>
     );
