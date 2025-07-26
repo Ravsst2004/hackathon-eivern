@@ -16,7 +16,7 @@ class IsMahasiswa
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role->nama === 'mahasiswa') {
+        if (Auth::check() && Auth::user()->Roles::MAHASISWA->value) {
             return $next($request);
         }
 

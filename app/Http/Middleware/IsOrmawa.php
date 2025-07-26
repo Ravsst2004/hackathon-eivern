@@ -16,7 +16,7 @@ class IsOrmawa
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role->nama === 'ormawa') {
+        if (Auth::check() && Auth::user()->Roles::ORMAWA->value) {
             return $next($request);
         }
 
