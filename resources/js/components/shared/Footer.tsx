@@ -13,13 +13,13 @@ export default function Footer() {
                 <div className="mb-6 flex flex-col items-center sm:mb-0 sm:items-start">
                     {/* Placeholder Logo */}
                     <Link
-                        href={route('landing-page')}
+                        href={route('landing')}
                         className="mb-4 inline-block rounded bg-blue-400 px-6 py-3 text-lg font-bold transition duration-150 hover:bg-gray-600"
                     >
                         Logo
                     </Link>
                     {/* Teks Copyright */}
-                    <p className="text-gray-400">Copyright &copy; {currentYear} SISKA. All rights reserved.</p>
+                    <p className="text-white hover:text-blue-300">Copyright &copy; {currentYear} SISKA. All rights reserved.</p>
                 </div>
 
                 {/* Kanan: Navigasi Tautan */}
