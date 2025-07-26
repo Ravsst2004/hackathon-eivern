@@ -112,6 +112,19 @@ class EventController extends Controller
 
         return redirect()->back()->with('success', 'Event berhasil diperbarui.');
     }
+    public function all_event()
+    {
+        // Ambil semua event, urutkan dari yang terbaru,
+        // dan gunakan paginate() untuk membaginya per halaman (misal: 12 item per halaman).
+        // Laravel akan secara otomatis menangani halaman saat ini berdasarkan query string di URL (?page=2).
+        $events = Event::latest()->paginate(12);
+
+        // Kirim data $events yang sudah dipaginasi ke komponen 'Event/Index'.
+        // Pastikan nama komponen 'Event/Index' sesuai dengan nama file Anda.
+        return Inertia::render('Events/AllEvents', [
+            'events' => $events,
+        ]);
+    }
 
     /**
      * Remove the specified resource from storage.

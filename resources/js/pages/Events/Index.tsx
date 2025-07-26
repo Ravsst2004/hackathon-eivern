@@ -208,7 +208,7 @@ export default function EventShow({ event, otherEvents, sertifikat }: PageProps)
                     <main className="lg:col-span-2">
                         <div className="mb-6 h-80 w-full overflow-hidden rounded-lg bg-gray-200">
                             {event.logo ? (
-                                <img src={`/storage/logos/${event.logo}`} alt={event.nama} className="h-full w-full object-cover" />
+                                <img src={`/storage/${event.logo}`} alt={event.nama} className="h-full w-full object-cover" />
                             ) : (
                                 <div className="flex h-full w-full items-center justify-center">
                                     <svg className="h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
