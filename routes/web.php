@@ -13,8 +13,8 @@ use App\Http\Controllers\Sertifikat\SertifikatController;
 // })->name('landing');
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/event/{id}', [EventDetailController::class, 'show'])->name('events.show');
 
-// Route::get('/event/{id}', [EventDetailController::class, 'show']);
 
 Route::get('/all-events', function () {
     return Inertia::render('Events/AllEvents'); // Atau cukup 'LandingPage' jika itu berfungsi
@@ -24,11 +24,26 @@ Route::middleware(['auth', 'verified', 'isBem', 'isOrmawa', 'isKemahasiswaan', '
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+    Route::resource('ormawa', OrmawaController::class);
+
+
+    Route::middleware(['isBem', 'isKemahasiswaan', 'isSuperAdmin'])->group(function () {
+        Route::get('/request-paraf', [SertifikatController::class, 'indexParaf'])->name('sertifikat.index');
+        Route::patch('/approve-paraf', [SertifikatController::class, 'approveParaf'])->name('sertifikat.approve');
+        Route::put('/generate-uniq-id', [SertifikatController::class, 'uniqIdGenerate'])
+                ->name('ormawa.generate-uniq-id');
+        Route::post('/account-request/{id}', [RequestAccountUserController::class, 'approveAccount'])->name('account-request.approve');
+    });
+
+    Route::middleware(['isOrmawa'])->group(function () {
+        Route::post('/import-excel', [SertifikatController::class, 'importExcel'])->name('ormawa.import-excel');
+        Route::get('/export-sertifikat/{eventId}', [SertifikatController::class, 'exportToexcel'])->name('sertifikat.export');
+    });
 });
-Route::get('/event/{id}', [EventDetailController::class, 'show'])->name('events.show');
-Route::resource('ormawa', OrmawaController::class);
 
 
+
+Route::patch('/paraf-request', [RequestAccountUserController::class, 'requestParafBem'])->name('paraf.request')->middleware('isMahasiswa');
 Route::get('/account-request', [RequestAccountUserController::class, 'approveAccountPage'])->name('account-request');
 
 
